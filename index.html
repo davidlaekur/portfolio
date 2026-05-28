@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Davidlaekur - Portafolio Web">
+    <meta property="og:url" content="https://davidlaekur.com">
+    <link rel="icon" type="image/jpg" href="https://davidlaekur.com/media/logo.jpg">
+    <title>davidlaekur</title>
+    <link rel="stylesheet" href="prop.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+   
+    <div class="fire-on"></div>
+
+    <!--  foto y descripción -->
+    <div class="about-me">
+        <div class="profile-container">
+            <img class="profile-pic" src="media/yo.png" alt="David Foto">
+            <div class="profile-logo">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="eye"></div>
+            </div>
+        </div>
+        <h1>Bienvenido, soy Davidlaekur</h1>
+        <p class="intro">Desarrollador junior full stack, ....working 🚧 </p>
+    </div>
+
+    <div class="switch-wrap">
+        <div id="switch">
+            <div id="circle"></div>
+        </div>
+    </div>
+
+    <div class="name">davidlaekur<span> DL</span></div>
+
+
+    <div id="portfolio" class="portfolio-container">
+        <button class="back-to-animation">Volver a Inicio</button>
+        
+        <div class="portfolio-header">
+            <h2></h2>
+            <nav class="portfolio-nav">
+                <ul>
+                    <li><a href="#sobre-mi" class="active">Sobre Mí</a></li>
+                    <li><a href="#experiencia">Experiencia</a></li>
+                    <li><a href="#formacion">Formación</a></li>
+                    <li><a href="#proyectos">Proyectos</a></li>
+                    <li><a href="#habilidades">Habilidades</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="portfolio-content">
+            <!-- SECCIÓN: SOBRE MÍ -->
+            <section id="sobre-mi" class="portfolio-section active">
+                <div class="intro-container">
+                    <div class="intro-image">
+                        <img src="media/yo.png" alt="David Photo">
+                        <div class="intro-social">
+                            <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="intro-text">
+                        <h3>Hola, soy <span class="highlight">Davidlaekur</span></h3>
+                        <h4>Desarrollador Full Stack Junior</h4>
+                        <p>Con más de 2 años de experiencia en el desarrollo web, me especializo en crear aplicaciones web modernas y responsivas que ofrecen experiencias de usuario excepcionales. Mi pasión es combinar un diseño atractivo con un código limpio y eficiente.</p>
+                        <p>Actualmente trabajo con el stack MERN (MongoDB, Express, React y Node.js), pero siempre estoy aprendiendo nuevas tecnologías para expandir mis habilidades.</p>
+                        <div class="intro-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">15+</span>
+                                <span class="stat-label">Proyectos</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">2+</span>
+                                <span class="stat-label">Años exp.</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">10+</span>
+                                <span class="stat-label">Tecnologías</span>
+                            </div>
+                        </div>
+                        <div class="cta-buttons">
+                            <a href="#contacto" class="cta-primary">Contactar</a>
+                            <a href="#proyectos" class="cta-secondary">Ver proyectos</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECCIÓN: EXPERIENCIA -->
+            <section id="experiencia" class="portfolio-section">
+                <h3>Experiencia Profesional</h3>
+                <div class="timeline">
+                    <div class="timeline-item" data-aos="fade-up">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">
+                            <span>2022 - Presente</span>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Desarrollador Frontend</h4>
+                            <h5>TechInnovations SL</h5>
+                            <p>Desarrollo de interfaces de usuario con React y Next.js para aplicaciones web empresariales. Implementación de diseños responsive y optimización del rendimiento frontend.</p>
+                            <ul class="timeline-responsibilities">
+                                <li>Desarrollo de componentes React reutilizables</li>
+                                <li>Implementación de interfaces según diseños de Figma</li>
+                                <li>Optimización de rendimiento y accesibilidad</li>
+                                <li>Colaboración con equipos de backend y diseño</li>
+                            </ul>
+                            <div class="tags">
+                                <span>React</span>
+                                <span>Next.js</span>
+                                <span>TypeScript</span>
+                                <span>Styled Components</span>
+                                <span>Redux</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">
+                            <span>2020 - 2022</span>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Desarrollador Web Junior</h4>
+                            <h5>Agencia Digital Creativa</h5>
+                            <p>Desarrollo de sitios web para clientes de diversos sectores utilizando WordPress y tecnologías frontend modernas.</p>
+                            <ul class="timeline-responsibilities">
+                                <li>Maquetación de sitios web responsivos</li>
+                                <li>Personalización de temas WordPress</li>
+                                <li>Optimización SEO on-page</li>
+                                <li>Soporte técnico a clientes</li>
+                            </ul>
+                            <div class="tags">
+                                <span>HTML5</span>
+                                <span>CSS3/SASS</span>
+                                <span>JavaScript</span>
+                                <span>WordPress</span>
+                                <span>PHP</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">
+                            <span>2019 - 2020</span>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Prácticas Desarrollo Web</h4>
+                            <h5>Innovatech Solutions</h5>
+                            <p>Prácticas profesionales enfocadas en el desarrollo de aplicaciones web con JavaScript y PHP.</p>
+                            <ul class="timeline-responsibilities">
+                                <li>Desarrollo de funcionalidades frontend</li>
+                                <li>Integración con APIs REST</li>
+                                <li>Testing y depuración</li>
+                            </ul>
+                            <div class="tags">
+                                <span>JavaScript</span>
+                                <span>jQuery</span>
+                                <span>PHP</span>
+                                <span>MySQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECCIÓN: FORMACIÓN -->
+            <section id="formacion" class="portfolio-section">
+                <h3>Formación Académica</h3>
+                <div class="education-grid">
+                    <div class="education-item" data-aos="zoom-in">
+                        <div class="education-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="education-content">
+                            <div class="education-year">2023 - 2025</div>
+                            <h4>Grado Superior en Desarrollo de Aplicaciones Web</h4>
+                            <h5>Instituto CEEDCV</h5>
+                            <p>Formación especializada en desarrollo web fullstack.</p>
+                            <div class="tags">
+                                <span>JavaScript</span>
+                                <span>PHP</span>
+                                <span>Java</span>
+                                <span>SQL</span>
+                                <span>HTML</span>
+                                <span>CSS</span>
+                                <span>React</span>
+                                <span>Node.js</span>
+                                <span>MongoDB</span>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="education-item" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="education-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="education-content">
+                            <div class="education-year">2022</div>
+                            <h4>Certificación en React Development</h4>
+                            <h5>FreeCodeCamp</h5>
+                            <p>Certificación intensiva centrada en el desarrollo de aplicaciones con React, Redux y arquitecturas modernas.</p>
+                            <div class="tags">
+                                <span>React</span>
+                                <span>Redux</span>
+                                <span>Hooks</span>
+                                <span>Context API</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="education-item" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="education-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="education-content">
+                            <div class="education-year">2021</div>
+                            <h4>Bootcamp Full Stack Development</h4>
+                            <h5>The Odin Project</h5>
+                            <p>Programa intensivo de desarrollo full stack con proyectos reales y metodologías ágiles.</p>
+                            <div class="tags">
+                                <span>Node.js</span>
+                                <span>Express</span>
+                                <span>MongoDB</span>
+                                <span>React</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECCIÓN: PROYECTOS -->
+            <section id="proyectos" class="portfolio-section">
+                <h3>Proyectos Destacados</h3>
+                <div class="projects-filter">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="web">Web</button>
+                    <button class="filter-btn" data-filter="app">Aplicaciones</button>
+                    <button class="filter-btn" data-filter="design">Diseño</button>
+                </div>
+                <div class="projects-grid">
+                    <div class="project-card" data-category="web app">
+                        <div class="project-img">
+                            <img src="https://picsum.photos/id/43/800/500" alt="Dashboard App">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-category">Web App</div>
+                            <h4>Plataforma Dashboard Analytics</h4>
+                            <p>Dashboard administrativo con analíticas en tiempo real, gráficos interactivos y sistema de notificaciones.</p>
+                            <div class="tags">
+                                <span>React</span>
+                                <span>Node.js</span>
+                                <span>Express</span>
+                                <span>Chart.js</span>
+                                <span>Socket.io</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card" data-category="web">
+                        <div class="project-img">
+                            <img src="https://picsum.photos/id/160/800/500" alt="E-commerce">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-category">Web</div>
+                            <h4>E-commerce Multivendor</h4>
+                            <p>Plataforma de comercio electrónico con múltiples vendedores, sistema de pagos integrado y panel de administración.</p>
+                            <div class="tags">
+                                <span>Next.js</span>
+                                <span>MongoDB</span>
+                                <span>Stripe</span>
+                                <span>JWT</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card" data-category="app">
+                        <div class="project-img">
+                            <img src="https://picsum.photos/id/180/800/500" alt="Task Manager">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-category">Aplicación</div>
+                            <h4>Task Manager Pro</h4>
+                            <p>Aplicación de gestión de tareas con funcionalidades de Kanban, recordatorios y colaboración en tiempo real.</p>
+                            <div class="tags">
+                                <span>React</span>
+                                <span>Firebase</span>
+                                <span>Redux</span>
+                                <span>PWA</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card" data-category="design web">
+                        <div class="project-img">
+                            <img src="https://picsum.photos/id/26/800/500" alt="Portfolio">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-category">Diseño Web</div>
+                            <h4>Portfolio Interactivo</h4>
+                            <p>Portfolio personal con animaciones interactivas, transiciones suaves y navegación intuitiva.</p>
+                            <div class="tags">
+                                <span>HTML5</span>
+                                <span>CSS3/SASS</span>
+                                <span>JavaScript</span>
+                                <span>GSAP</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card" data-category="app">
+                        <div class="project-img">
+                            <img src="https://picsum.photos/id/21/800/500" alt="Weather App">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-category">Aplicación</div>
+                            <h4>Weather App Premium</h4>
+                            <p>Aplicación de clima con pronósticos detallados, alertas meteorológicas y visualizaciones interactivas.</p>
+                            <div class="tags">
+                                <span>Vue.js</span>
+                                <span>Axios</span>
+                                <span>OpenWeatherAPI</span>
+                                <span>SVG</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card" data-category="design">
+                        <div class="project-img">
+                            <img src="https://picsum.photos/id/42/800/500" alt="UI Kit">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-category">Diseño</div>
+                            <h4>UI Kit Moderno</h4>
+                            <p>Sistema de diseño completo con componentes reutilizables, guía de estilos y documentación.</p>
+                            <div class="tags">
+                                <span>Figma</span>
+                                <span>StoryBook</span>
+                                <span>Design System</span>
+                                <span>Atomic Design</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECCIÓN: HABILIDADES -->
+            <section id="habilidades" class="portfolio-section">
+                <h3>Habilidades Técnicas</h3>
+                <div class="skills-container">
+                    <div class="skills-category">
+                        <h4><i class="fas fa-code"></i> Frontend Development</h4>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>HTML5/CSS3</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>JavaScript (ES6+)</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>React</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Vue.js</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>SASS/LESS</span>
+                                    <span>80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>TypeScript</span>
+                                    <span>70%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h4><i class="fas fa-server"></i> Backend Development</h4>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Node.js</span>
+                                    <span>80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Express</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>PHP</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>MongoDB</span>
+                                    <span>70%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>MySQL</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>RESTful APIs</span>
+                                    <span>85%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h4><i class="fas fa-tools"></i> Herramientas y Otros</h4>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Git/GitHub</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Webpack/Vite</span>
+                                    <span>75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Docker</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Figma/Adobe XD</span>
+                                    <span>70%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>Jest/Testing</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span>SEO/Optimización</span>
+                                    <span>80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECCIÓN: CONTACTO -->
+            <section id="contacto" class="portfolio-section">
+                <h3>Contacto</h3>
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <div class="contact-header">
+                            <h4>¿Tienes un proyecto en mente?</h4>
+                            <p>Estoy disponible para trabajos freelance y oportunidades a tiempo completo. ¡Hablemos sobre cómo puedo ayudarte!</p>
+                        </div>
+                        <div class="contact-methods">
+                            <div class="contact-method">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <h5>Email</h5>
+                                    <p>contacto@davidlaekur.com</p>
+                                </div>
+                            </div>
+                            <div class="contact-method">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <h5>Teléfono</h5>
+                                    <p>+34 600 123 456</p>
+                                </div>
+                            </div>
+                            <div class="contact-method">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <h5>Ubicación</h5>
+                                    <p>Valencia, España</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="contact-social">
+                            <h5>Sígueme en</h5>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <h4>Envíame un mensaje</h4>
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="name">Nombre</label>
+                                <input type="text" id="name" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" placeholder="Tu email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Asunto</label>
+                                <input type="text" id="subject" placeholder="Asunto del mensaje">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Mensaje</label>
+                                <textarea id="message" placeholder="Tu mensaje" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">Enviar Mensaje</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables
+            const logo = document.querySelector('.profile-logo');
+            const switchBtn = document.getElementById('switch');
+            const portfolioNavLinks = document.querySelectorAll('.portfolio-nav a');
+            const portfolioSections = document.querySelectorAll('.portfolio-section');
+            const backBtn = document.querySelector('.back-to-animation');
+            let portfolioTimer = null;
+            
+            console.log('Logo encontrado:', !!logo);
+            console.log('Portfolio container:', document.querySelector('.portfolio-container'));
+            
+            // LOGO - mostrar/ocultar portfolio
+            if (logo) {
+                logo.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.body.classList.add('hide-animation');
+                    return false;
+                });
+            }
+            
+            // BOTÓN VOLVER
+            if (backBtn) {
+                backBtn.addEventListener('click', function() {
+                    document.body.classList.remove('hide-animation');
+                    // Si la animación está apagada, enciéndela
+                    if (document.body.classList.contains('fire-off')) {
+                        document.body.classList.remove('fire-off');
+                        switchBtn.classList.remove('switched');
+                    }
+                });
+            }
+            
+            // SWITCH con temporizador para portfolio
+            if (switchBtn) {
+                switchBtn.addEventListener('click', function() {
+                    document.body.classList.toggle('fire-off');
+                    this.classList.toggle('switched');
+                    
+                    // Si se apaga la animación, programar la apertura del portfolio
+                    if (document.body.classList.contains('fire-off')) {
+                        // Notificar al usuario con cuenta regresiva
+                        showNotification("Entrando al portfolio en 3 segundos...");
+                        
+                        // Cancelar cualquier temporizador existente
+                        if (portfolioTimer) clearTimeout(portfolioTimer);
+                        
+                        // Configurar nuevo temporizador (3 segundos)
+                        portfolioTimer = setTimeout(function() {
+                            document.body.classList.add('hide-animation');
+                        }, 3000);
+                    } else {
+                        // Si se enciende la animación, cancelar el temporizador
+                        if (portfolioTimer) {
+                            clearTimeout(portfolioTimer);
+                            portfolioTimer = null;
+                        }
+                        
+                        // Cancelar cualquier cuenta regresiva activa
+                        const notification = document.querySelector('.portfolio-notification');
+                        if (notification && notification.dataset.countdownId) {
+                            clearInterval(parseInt(notification.dataset.countdownId));
+                            notification.classList.remove('show');
+                        }
+                    }
+                });
+            }
+            
+            // NAVEGACIÓN PORTFOLIO
+            portfolioNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    portfolioNavLinks.forEach(item => item.classList.remove('active'));
+                    portfolioSections.forEach(item => item.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
+            
+            // Función mejorada para mostrar notificación con cuenta atrás
+            function showNotification(message) {
+                // Crear notificación si no existe
+                let notification = document.querySelector('.portfolio-notification');
+                if (!notification) {
+                    notification = document.createElement('div');
+                    notification.className = 'portfolio-notification';
+                    document.body.appendChild(notification);
+                }
+                
+                // Extraer el número de segundos del mensaje (asumiendo formato "... en X segundos...")
+                let secondsText = message.match(/\d+/);
+                let seconds = secondsText ? parseInt(secondsText[0]) : 3;
+                let baseMessage = "Entrando al portfolio en ";
+                
+                // Mostrar mensaje inicial
+                notification.textContent = baseMessage + seconds + " segundos...";
+                notification.classList.add('show');
+                
+                // Iniciar cuenta regresiva
+                let countdownInterval = setInterval(function() {
+                    seconds--;
+                    
+                    if (seconds > 0) {
+                        // Actualizar texto con segundos restantes
+                        notification.textContent = baseMessage + seconds + " segundos...";
+                    } else if (seconds === 0) {
+                        // Último segundo
+                        notification.textContent = "¡Entrando ahora!";
+                    } else {
+                        // Limpiar intervalo y ocultar notificación
+                        clearInterval(countdownInterval);
+                        notification.classList.remove('show');
+                    }
+                }, 1000);
+                
+                // Guardar el ID del intervalo en la notificación para poder cancelarlo
+                notification.dataset.countdownId = countdownInterval;
+            }
+        });
+    </script>
+</body>
+</html>
