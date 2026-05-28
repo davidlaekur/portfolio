@@ -5,6 +5,23 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    /* ---------- Utilidad: activar una sección ---------- */
+    const activateSection = (id) => {
+        const target = document.getElementById(id);
+        if (!target) return false;
+
+        document.querySelectorAll('.section').forEach((s) => s.classList.remove('is-active'));
+        document.querySelectorAll('.portfolio-nav a').forEach((l) => l.classList.remove('is-active'));
+
+        target.classList.add('is-active');
+
+        const matchingNav = document.querySelector(`.portfolio-nav a[href="#${id}"]`);
+        if (matchingNav) matchingNav.classList.add('is-active');
+
+        document.getElementById('portfolio').scrollTo({ top: 0, behavior: 'smooth' });
+        return true;
+    };
+
     /* ---------- Fondo Matrix ---------- */
     const initMatrix = () => {
         const canvas = document.getElementById('matrix-canvas');
@@ -110,24 +127,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    /* ---------- Navegación entre secciones ---------- */
-    const initNavigation = () => {
-        const links = document.querySelectorAll('.portfolio-nav a');
-        const sections = document.querySelectorAll('.section');
-        const scroller = document.getElementById('portfolio');
-
-        links.forEach((link) => {
+    /* ---------- Enlaces internos (nav + botones internos) ---------- */
+    const initInternalLinks = () => {
+        document.querySelectorAll('a[href^="#"]').forEach((link) => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const id = link.getAttribute('href').substring(1);
-                const target = document.getElementById(id);
-                if (!target) return;
-
-                links.forEach((l) => l.classList.remove('is-active'));
-                sections.forEach((s) => s.classList.remove('is-active'));
-                link.classList.add('is-active');
-                target.classList.add('is-active');
-                scroller.scrollTo({ top: 0, behavior: 'smooth' });
+                if (!id) return;
+                if (activateSection(id)) {
+                    e.preventDefault();
+                }
             });
         });
     };
@@ -147,6 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMatrix();
     initTypewriter();
     initToggle();
-    initNavigation();
+    initInternalLinks();
     initContactForm();
 });
