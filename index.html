@@ -5,764 +5,943 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Davidlaekur - Portafolio Web">
     <meta property="og:url" content="https://davidlaekur.com">
-    <link rel="icon" type="image/jpg" href="https://davidlaekur.com/media/logo.jpg">
+    <link rel="icon" type="image/jpg" href="media/logo.jpg">
     <title>davidlaekur</title>
     <link rel="stylesheet" href="prop.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+        body {
+            width: 100%; height: 100vh;
+            overflow: hidden;
+            background: #070d14;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+        /* ===== CANVAS MATRIX ===== */
+        #matrix-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.18;
+        }
+
+        /* ===== PANTALLA DE INICIO ===== */
+        .landing {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        body.hide-animation .landing {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-20px);
+        }
+
+        .landing-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(7, 13, 20, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 148, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        /* foto */
+        .profile-pic {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 148, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 148, 0, 0.2);
+        }
+
+        /* nombre */
+        .landing h1 {
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            font-weight: 700;
+            text-align: center;
+            background: linear-gradient(90deg, #fff 0%, #ffb347 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* typewriter */
+        .typewriter-wrap {
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            min-height: 1.5em;
+        }
+
+        .typewriter-wrap span {
+            border-right: 2px solid #ffb347;
+            padding-right: 3px;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        @keyframes blink { 0%, 100% { border-color: #ffb347; } 50% { border-color: transparent; } }
+
+        /* redes sociales */
+        .landing-socials {
+            display: flex;
+            gap: 12px;
+        }
+
+        .landing-socials a {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .landing-socials a:hover {
+            background: rgba(255, 148, 0, 0.2);
+            border-color: rgba(255, 148, 0, 0.4);
+            color: #ffb347;
+            transform: translateY(-3px);
+        }
+
+        /* switch */
+        .switch-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switch-label {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        #switch {
+            width: 60px; height: 31px;
+            border: 2px solid #fec22a;
+            border-radius: 27px;
+            background: #ff9400;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.54, 1.6, 0.5, 1);
+        }
+
+        #circle {
+            position: absolute;
+            top: 50%; transform: translateY(-50%);
+            left: 4px;
+            width: 19px; height: 19px;
+            border-radius: 50%;
+            background: #e9e5d5;
+            transition: all 0.4s cubic-bezier(0.54, 1.6, 0.5, 1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        #switch.switched { border-color: #555; background: #111; }
+        #switch.switched #circle { left: calc(100% - 23px); }
+
+        /* botón ver portfolio */
+        .enter-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffb347);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.35);
+        }
+
+        /* nombre grande de fondo */
+        .bg-name {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 5vw;
+            font-weight: 700;
+            white-space: nowrap;
+            color: rgba(255,255,255,0.04);
+            letter-spacing: 0.1em;
+            z-index: 2;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* ===== NOTIFICACIÓN ===== */
+        .portfolio-notification {
+            position: fixed;
+            bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: linear-gradient(45deg, #ff6b6b, #ffb347);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-size: 13px; font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s ease;
+            white-space: nowrap;
+        }
+
+        .portfolio-notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== PORTFOLIO ===== */
+        .portfolio-container {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0d1b2a 0%, #070d14 100%);
+            z-index: 100;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px 20px 60px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body.hide-animation .portfolio-container { display: block; }
+
+        /* header nav */
+        .portfolio-header {
+            max-width: 1100px;
+            margin: 0 auto 35px;
+            padding-top: 60px;
+            text-align: center;
+        }
+
+        .portfolio-nav ul {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .portfolio-nav a {
+            display: inline-block;
+            padding: 9px 18px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.04);
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .portfolio-nav a:hover,
+        .portfolio-nav a.active {
+            color: #ffb347;
+            background: rgba(255,165,0,0.1);
+            border-color: rgba(255,165,0,0.25);
+        }
+
+        /* botón volver */
+        .back-to-animation {
+            position: fixed;
+            top: 18px; left: 18px;
+            background: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.8);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 9px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 10000;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-to-animation:hover {
+            background: rgba(255,165,0,0.15);
+            border-color: rgba(255,165,0,0.3);
+            color: #ffb347;
+        }
+
+        /* contenido */
+        .portfolio-content { max-width: 1100px; margin: 0 auto; }
+
+        .portfolio-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            padding: 10px 5px;
+        }
+
+        .portfolio-section.active { display: block; }
+
+        .portfolio-section > h3 {
+            font-size: 1.8rem;
+            margin-bottom: 35px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,165,0,0.2);
+            color: #fff;
+            position: relative;
+        }
+
+        .portfolio-section > h3::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: -1px;
+            width: 60px; height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, #ffb347);
+        }
+
+        /* ===== SOBRE MÍ ===== */
+        .intro-container { display: flex; flex-wrap: wrap; gap: 35px; align-items: center; }
+
+        .intro-image {
+            flex: 0 0 240px; height: 240px;
+            border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255,165,0,0.2);
+        }
+
+        .intro-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        .intro-social { display: flex; justify-content: center; gap: 10px; margin-top: 14px; }
+
+        .social-icon {
+            width: 38px; height: 38px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover { background: rgba(255,165,0,0.15); color: #ffb347; transform: translateY(-3px); }
+
+        .intro-text { flex: 1; min-width: 260px; }
+        .intro-text h3 { font-size: 2rem; border: none !important; margin-bottom: 8px; }
+        .intro-text h3::after { display: none !important; }
+        .intro-text h4 { font-size: 1.1rem; color: #ffb347; margin-bottom: 16px; font-weight: 500; }
+        .intro-text p { margin-bottom: 14px; line-height: 1.8; color: rgba(255,255,255,0.75); font-size: 0.95rem; }
+
+        .highlight { color: #ffb347; }
+
+        .intro-stats { display: flex; gap: 20px; margin: 22px 0; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #ffb347; display: block; }
+        .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+        .cta-buttons { display: flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+
+        .cta-primary, .cta-secondary {
+            padding: 10px 22px; border-radius: 30px;
+            text-decoration: none; font-weight: 500;
+            transition: all 0.3s ease; font-size: 0.9rem;
+        }
+
+        .cta-primary { background: linear-gradient(45deg, #ff6b6b, #ffb347); color: white; }
+        .cta-secondary { background: rgba(255,255,255,0.07); color: white; border: 1px solid rgba(255,255,255,0.12); }
+        .cta-primary:hover, .cta-secondary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.25); }
+
+        /* ===== EXPERIENCIA ===== */
+        .timeline { position: relative; padding-left: 50px; margin-top: 20px; }
+        .timeline::before { content: ''; position: absolute; left: 12px; top: 0; height: 100%; width: 1px; background: rgba(255,165,0,0.15); }
+        .timeline-item { position: relative; margin-bottom: 40px; }
+        .timeline-dot { position: absolute; left: -50px; top: 4px; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(45deg, #ff6b6b, #ffb347); box-shadow: 0 0 0 4px rgba(255,165,0,0.1); z-index: 1; }
+        .timeline-date { display: inline-block; padding: 5px 12px; background: rgba(255,165,0,0.08); border: 1px solid rgba(255,165,0,0.15); border-radius: 20px; font-size: 0.82rem; margin-bottom: 10px; color: #ffb347; }
+        .timeline-content { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 22px; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.06); border-left: 2px solid rgba(255,165,0,0.3); }
+        .timeline-content:hover { background: rgba(255,255,255,0.05); transform: translateX(4px); }
+        .timeline-content h4 { color: #fff; font-size: 1.2rem; margin-bottom: 3px; }
+        .timeline-content h5 { color: #ffb347; font-size: 0.95rem; margin-bottom: 10px; font-weight: 500; }
+        .timeline-content p { margin-bottom: 10px; line-height: 1.7; color: rgba(255,255,255,0.7); font-size: 0.92rem; }
+        .timeline-responsibilities { list-style: none; padding-left: 0; margin-bottom: 14px; }
+        .timeline-responsibilities li { position: relative; padding-left: 20px; margin-bottom: 5px; color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+        .timeline-responsibilities li::before { content: '▸'; position: absolute; left: 0; color: #ffb347; }
+
+        /* ===== TAGS ===== */
+        .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+        .tags span { background: rgba(255,165,0,0.08); color: #ffb347; padding: 3px 11px; border-radius: 20px; font-size: 0.76rem; font-weight: 500; border: 1px solid rgba(255,165,0,0.15); }
+
+        /* ===== FORMACIÓN ===== */
+        .education-grid { display: flex; flex-direction: column; gap: 20px; }
+        .education-item { display: flex; align-items: flex-start; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 22px; transition: all 0.3s ease; gap: 18px; border: 1px solid rgba(255,255,255,0.06); }
+        .education-item:hover { background: rgba(255,255,255,0.05); transform: translateY(-3px); }
+        .education-icon { flex: 0 0 48px; height: 48px; background: linear-gradient(45deg, #ff6b6b, #ffb347); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #fff; }
+        .education-content { flex: 1; }
+        .education-year { display: inline-block; padding: 4px 11px; background: rgba(255,165,0,0.08); border: 1px solid rgba(255,165,0,0.15); border-radius: 20px; font-size: 0.82rem; margin-bottom: 7px; color: #ffb347; }
+        .education-content h4 { color: #fff; font-size: 1.1rem; margin-bottom: 3px; }
+        .education-content h5 { color: #ffb347; font-size: 0.9rem; margin-bottom: 10px; font-weight: 500; }
+        .education-content p { margin-bottom: 8px; line-height: 1.7; color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+
+        /* ===== PROYECTOS ===== */
+        .projects-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; }
+        .filter-btn { padding: 7px 18px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 25px; cursor: pointer; font-size: 0.87rem; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .filter-btn:hover, .filter-btn.active { background: rgba(255,165,0,0.1); color: #ffb347; border-color: rgba(255,165,0,0.3); }
+        .project-card.hidden { display: none; }
+
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
+
+        .project-card { background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; }
+        .project-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); border-color: rgba(255,165,0,0.15); }
+
+        .project-img { position: relative; width: 100%; height: 180px; overflow: hidden; }
+        .project-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .project-card:hover .project-img img { transform: scale(1.06); }
+
+        .project-links { position: absolute; bottom: -50px; left: 0; width: 100%; display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); transition: all 0.3s ease; z-index: 2; }
+        .project-card:hover .project-links { bottom: 0; }
+
+        .project-link { width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; }
+        .project-link:hover { background: linear-gradient(45deg, #ff6b6b, #ffb347); }
+
+        .project-info { padding: 18px; flex: 1; }
+        .project-category { display: inline-block; padding: 3px 10px; background: rgba(255,165,0,0.08); color: #ffb347; border-radius: 20px; font-size: 0.75rem; font-weight: 500; margin-bottom: 10px; border: 1px solid rgba(255,165,0,0.15); }
+        .project-info h4 { color: #fff; font-size: 1.1rem; margin-bottom: 8px; }
+        .project-info p { margin-bottom: 12px; line-height: 1.6; color: rgba(255,255,255,0.65); font-size: 0.88rem; }
+        .project-info .tags span { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); border-color: rgba(255,255,255,0.08); }
+
+        /* ===== HABILIDADES (rediseñadas) ===== */
+        .skills-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+        .skills-category { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 22px; border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s ease; }
+        .skills-category:hover { background: rgba(255,255,255,0.05); }
+        .skills-category h4 { color: #fff; font-size: 1rem; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .skills-category h4 i { color: #ffb347; font-size: 1.1rem; }
+
+        /* chip grid para habilidades */
+        .skills-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        .skill-chip {
+            display: flex; align-items: center; gap: 6px;
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 30px;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .skill-chip:hover {
+            background: rgba(255,165,0,0.1);
+            border-color: rgba(255,165,0,0.25);
+            color: #ffb347;
+            transform: translateY(-2px);
+        }
+
+        .skill-chip .skill-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #ffb347;
+            flex-shrink: 0;
+        }
+
+        .skill-chip.advanced .skill-dot { background: #ff6b6b; }
+        .skill-chip.mid .skill-dot { background: #ffb347; }
+        .skill-chip.learning .skill-dot { background: rgba(255,255,255,0.3); }
+
+        .skills-legend { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: rgba(255,255,255,0.45); }
+        .legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+        /* ===== CONTACTO ===== */
+        .contact-container { display: flex; flex-wrap: wrap; gap: 25px; }
+        .contact-info, .contact-form { flex: 1; min-width: 260px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 25px; border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s ease; }
+        .contact-info:hover, .contact-form:hover { background: rgba(255,255,255,0.05); }
+        .contact-header h4 { font-size: 1.3rem; margin-bottom: 7px; color: #fff; }
+        .contact-header p { margin-bottom: 22px; line-height: 1.7; color: rgba(255,255,255,0.65); font-size: 0.92rem; }
+        .contact-methods { display: flex; flex-direction: column; gap: 15px; margin-bottom: 22px; }
+        .contact-method { display: flex; align-items: center; gap: 12px; }
+        .contact-method i { width: 38px; height: 38px; background: rgba(255,165,0,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #ffb347; flex-shrink: 0; border: 1px solid rgba(255,165,0,0.15); }
+        .contact-method h5 { font-size: 0.9rem; margin-bottom: 2px; color: #fff; }
+        .contact-method p { font-size: 0.85rem; color: rgba(255,255,255,0.6); word-break: break-word; }
+        .contact-social h5 { font-size: 0.95rem; margin-bottom: 10px; color: #fff; }
+        .social-links { display: flex; gap: 10px; }
+        .social-link { width: 36px; height: 36px; background: rgba(255,255,255,0.06); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-size: 1rem; transition: all 0.3s ease; text-decoration: none; border: 1px solid rgba(255,255,255,0.08); }
+        .social-link:hover { background: rgba(255,165,0,0.15); color: #ffb347; transform: translateY(-3px); }
+        .contact-form h4 { font-size: 1.3rem; margin-bottom: 18px; color: #fff; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 7px; font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+        .form-group input, .form-group textarea { width: 100%; padding: 11px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 0.9rem; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: rgba(255,165,0,0.4); background: rgba(255,255,255,0.07); }
+        .form-group textarea { resize: vertical; min-height: 110px; }
+        .submit-btn { width: 100%; background: linear-gradient(45deg, #ff6b6b, #ffb347); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,107,107,0.3); }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .portfolio-container { padding: 15px 15px 50px; }
+            .portfolio-header { padding-top: 55px; }
+            .portfolio-nav a { padding: 7px 13px; font-size: 0.82rem; }
+            .intro-container { flex-direction: column; align-items: center; }
+            .intro-image { flex: none; width: 180px; height: 180px; }
+            .intro-text { text-align: center; min-width: unset; }
+            .intro-stats { justify-content: center; }
+            .cta-buttons { justify-content: center; }
+            .timeline { padding-left: 35px; }
+            .timeline-dot { left: -35px; width: 20px; height: 20px; }
+            .education-item { flex-direction: column; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .skills-container { grid-template-columns: 1fr; }
+            .contact-container { flex-direction: column; }
+            .landing-inner { padding: 30px 20px; }
+        }
+    </style>
+</head>
 <body>
 
-   
-    <div class="fire-on"></div>
+<!-- Canvas efecto Matrix -->
+<canvas id="matrix-canvas"></canvas>
 
-    <!--  foto y descripción -->
-    <div class="about-me">
-        <div class="profile-container">
-            <img class="profile-pic" src="media/yo.png" alt="David Foto">
-            <div class="profile-logo">
-                <div class="sparkle"></div>
-                <div class="sparkle"></div>
-                <div class="sparkle"></div>
-                <div class="sparkle"></div>
-                <div class="eye"></div>
-            </div>
+<!-- Nombre de fondo -->
+<div class="bg-name">davidlaekur</div>
+
+<!-- PANTALLA DE INICIO -->
+<div class="landing">
+    <div class="landing-inner">
+        <img class="profile-pic" src="media/yo.png" alt="David foto">
+
+        <h1>Hola, soy Davidlaekur</h1>
+
+        <div class="typewriter-wrap">
+            <span id="typewriter"></span>
         </div>
-        <h1>Bienvenido, soy Davidlaekur</h1>
-        <p class="intro">Desarrollador junior full stack, ....working 🚧 </p>
+
+        <div class="landing-socials">
+            <a href="https://github.com/davidlaekur" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="mailto:contacto@davidlaekur.com" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+
+        <div class="switch-area">
+            <span class="switch-label">Ver portfolio</span>
+            <div id="switch"><div id="circle"></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- PORTFOLIO -->
+<div class="portfolio-container" id="portfolio">
+    <button class="back-to-animation">← Inicio</button>
+
+    <div class="portfolio-header">
+        <nav class="portfolio-nav">
+            <ul>
+                <li><a href="#sobre-mi" class="active">Sobre Mí</a></li>
+                <li><a href="#experiencia">Experiencia</a></li>
+                <li><a href="#formacion">Formación</a></li>
+                <li><a href="#proyectos">Proyectos</a></li>
+                <li><a href="#habilidades">Habilidades</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
     </div>
 
-    <div class="switch-wrap">
-        <div id="switch">
-            <div id="circle"></div>
-        </div>
-    </div>
+    <div class="portfolio-content">
 
-    <div class="name">davidlaekur<span> DL</span></div>
-
-
-    <div id="portfolio" class="portfolio-container">
-        <button class="back-to-animation">Volver a Inicio</button>
-        
-        <div class="portfolio-header">
-            <h2></h2>
-            <nav class="portfolio-nav">
-                <ul>
-                    <li><a href="#sobre-mi" class="active">Sobre Mí</a></li>
-                    <li><a href="#experiencia">Experiencia</a></li>
-                    <li><a href="#formacion">Formación</a></li>
-                    <li><a href="#proyectos">Proyectos</a></li>
-                    <li><a href="#habilidades">Habilidades</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                </ul>
-            </nav>
-        </div>
-        
-        <div class="portfolio-content">
-            <!-- SECCIÓN: SOBRE MÍ -->
-            <section id="sobre-mi" class="portfolio-section active">
-                <div class="intro-container">
+        <!-- SOBRE MÍ -->
+        <section id="sobre-mi" class="portfolio-section active">
+            <h3>Sobre Mí</h3>
+            <div class="intro-container">
+                <div>
                     <div class="intro-image">
                         <img src="media/yo.png" alt="David Photo">
-                        <div class="intro-social">
-                            <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
-                            <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
-                            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        </div>
                     </div>
-                    <div class="intro-text">
-                        <h3>Hola, soy <span class="highlight">Davidlaekur</span></h3>
-                        <h4>Desarrollador Full Stack Junior</h4>
-                        <p>Con más de 2 años de experiencia en el desarrollo web, me especializo en crear aplicaciones web modernas y responsivas que ofrecen experiencias de usuario excepcionales. Mi pasión es combinar un diseño atractivo con un código limpio y eficiente.</p>
-                        <p>Actualmente trabajo con el stack MERN (MongoDB, Express, React y Node.js), pero siempre estoy aprendiendo nuevas tecnologías para expandir mis habilidades.</p>
-                        <div class="intro-stats">
-                            <div class="stat-item">
-                                <span class="stat-number">15+</span>
-                                <span class="stat-label">Proyectos</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">2+</span>
-                                <span class="stat-label">Años exp.</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">10+</span>
-                                <span class="stat-label">Tecnologías</span>
-                            </div>
-                        </div>
-                        <div class="cta-buttons">
-                            <a href="#contacto" class="cta-primary">Contactar</a>
-                            <a href="#proyectos" class="cta-secondary">Ver proyectos</a>
-                        </div>
+                    <div class="intro-social">
+                        <a href="https://github.com/davidlaekur" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:contacto@davidlaekur.com" class="social-icon"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
-            </section>
-            
-            <!-- SECCIÓN: EXPERIENCIA -->
-            <section id="experiencia" class="portfolio-section">
-                <h3>Experiencia Profesional</h3>
-                <div class="timeline">
-                    <div class="timeline-item" data-aos="fade-up">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">
-                            <span>2022 - Presente</span>
+                <div class="intro-text">
+                    <h3>Hola, soy <span class="highlight">Davidlaekur</span></h3>
+                    <h4>Desarrollador Full Stack Junior · Valencia</h4>
+                    <p>Recién graduado en Desarrollo de Aplicaciones Web, con ganas de construir cosas reales y aprender rápido. Me gusta el código limpio, el diseño cuidado y los proyectos que resuelven problemas concretos.</p>
+                    <p>Busco mis primeros proyectos freelance en Valencia. Si necesitas una web, una automatización o alguien que se implique de verdad, hablamos.</p>
+                    <div class="intro-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">DAW</span>
+                            <span class="stat-label">Titulación</span>
                         </div>
-                        <div class="timeline-content">
-                            <h4>Desarrollador Frontend</h4>
-                            <h5>TechInnovations SL</h5>
-                            <p>Desarrollo de interfaces de usuario con React y Next.js para aplicaciones web empresariales. Implementación de diseños responsive y optimización del rendimiento frontend.</p>
-                            <ul class="timeline-responsibilities">
-                                <li>Desarrollo de componentes React reutilizables</li>
-                                <li>Implementación de interfaces según diseños de Figma</li>
-                                <li>Optimización de rendimiento y accesibilidad</li>
-                                <li>Colaboración con equipos de backend y diseño</li>
-                            </ul>
-                            <div class="tags">
-                                <span>React</span>
-                                <span>Next.js</span>
-                                <span>TypeScript</span>
-                                <span>Styled Components</span>
-                                <span>Redux</span>
-                            </div>
+                        <div class="stat-item">
+                            <span class="stat-number">VLC</span>
+                            <span class="stat-label">Ubicación</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">∞</span>
+                            <span class="stat-label">Ganas</span>
                         </div>
                     </div>
-                    
-                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">
-                            <span>2020 - 2022</span>
-                        </div>
-                        <div class="timeline-content">
-                            <h4>Desarrollador Web Junior</h4>
-                            <h5>Agencia Digital Creativa</h5>
-                            <p>Desarrollo de sitios web para clientes de diversos sectores utilizando WordPress y tecnologías frontend modernas.</p>
-                            <ul class="timeline-responsibilities">
-                                <li>Maquetación de sitios web responsivos</li>
-                                <li>Personalización de temas WordPress</li>
-                                <li>Optimización SEO on-page</li>
-                                <li>Soporte técnico a clientes</li>
-                            </ul>
-                            <div class="tags">
-                                <span>HTML5</span>
-                                <span>CSS3/SASS</span>
-                                <span>JavaScript</span>
-                                <span>WordPress</span>
-                                <span>PHP</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-date">
-                            <span>2019 - 2020</span>
-                        </div>
-                        <div class="timeline-content">
-                            <h4>Prácticas Desarrollo Web</h4>
-                            <h5>Innovatech Solutions</h5>
-                            <p>Prácticas profesionales enfocadas en el desarrollo de aplicaciones web con JavaScript y PHP.</p>
-                            <ul class="timeline-responsibilities">
-                                <li>Desarrollo de funcionalidades frontend</li>
-                                <li>Integración con APIs REST</li>
-                                <li>Testing y depuración</li>
-                            </ul>
-                            <div class="tags">
-                                <span>JavaScript</span>
-                                <span>jQuery</span>
-                                <span>PHP</span>
-                                <span>MySQL</span>
-                            </div>
-                        </div>
+                    <div class="cta-buttons">
+                        <a href="#contacto" class="cta-primary">Contactar</a>
+                        <a href="#proyectos" class="cta-secondary">Ver proyectos</a>
                     </div>
                 </div>
-            </section>
-            
-            <!-- SECCIÓN: FORMACIÓN -->
-            <section id="formacion" class="portfolio-section">
-                <h3>Formación Académica</h3>
-                <div class="education-grid">
-                    <div class="education-item" data-aos="zoom-in">
-                        <div class="education-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div class="education-content">
-                            <div class="education-year">2023 - 2025</div>
-                            <h4>Grado Superior en Desarrollo de Aplicaciones Web</h4>
-                            <h5>Instituto CEEDCV</h5>
-                            <p>Formación especializada en desarrollo web fullstack.</p>
-                            <div class="tags">
-                                <span>JavaScript</span>
-                                <span>PHP</span>
-                                <span>Java</span>
-                                <span>SQL</span>
-                                <span>HTML</span>
-                                <span>CSS</span>
-                                <span>React</span>
-                                <span>Node.js</span>
-                                <span>MongoDB</span>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="education-item" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="education-icon">
-                            <i class="fas fa-certificate"></i>
-                        </div>
-                        <div class="education-content">
-                            <div class="education-year">2022</div>
-                            <h4>Certificación en React Development</h4>
-                            <h5>FreeCodeCamp</h5>
-                            <p>Certificación intensiva centrada en el desarrollo de aplicaciones con React, Redux y arquitecturas modernas.</p>
-                            <div class="tags">
-                                <span>React</span>
-                                <span>Redux</span>
-                                <span>Hooks</span>
-                                <span>Context API</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="education-item" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="education-icon">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <div class="education-content">
-                            <div class="education-year">2021</div>
-                            <h4>Bootcamp Full Stack Development</h4>
-                            <h5>The Odin Project</h5>
-                            <p>Programa intensivo de desarrollo full stack con proyectos reales y metodologías ágiles.</p>
-                            <div class="tags">
-                                <span>Node.js</span>
-                                <span>Express</span>
-                                <span>MongoDB</span>
-                                <span>React</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- SECCIÓN: PROYECTOS -->
-            <section id="proyectos" class="portfolio-section">
-                <h3>Proyectos Destacados</h3>
-                <div class="projects-filter">
-                    <button class="filter-btn active" data-filter="all">Todos</button>
-                    <button class="filter-btn" data-filter="web">Web</button>
-                    <button class="filter-btn" data-filter="app">Aplicaciones</button>
-                    <button class="filter-btn" data-filter="design">Diseño</button>
-                </div>
-                <div class="projects-grid">
-                    <div class="project-card" data-category="web app">
-                        <div class="project-img">
-                            <img src="https://picsum.photos/id/43/800/500" alt="Dashboard App">
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <div class="project-category">Web App</div>
-                            <h4>Plataforma Dashboard Analytics</h4>
-                            <p>Dashboard administrativo con analíticas en tiempo real, gráficos interactivos y sistema de notificaciones.</p>
-                            <div class="tags">
-                                <span>React</span>
-                                <span>Node.js</span>
-                                <span>Express</span>
-                                <span>Chart.js</span>
-                                <span>Socket.io</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card" data-category="web">
-                        <div class="project-img">
-                            <img src="https://picsum.photos/id/160/800/500" alt="E-commerce">
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <div class="project-category">Web</div>
-                            <h4>E-commerce Multivendor</h4>
-                            <p>Plataforma de comercio electrónico con múltiples vendedores, sistema de pagos integrado y panel de administración.</p>
-                            <div class="tags">
-                                <span>Next.js</span>
-                                <span>MongoDB</span>
-                                <span>Stripe</span>
-                                <span>JWT</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card" data-category="app">
-                        <div class="project-img">
-                            <img src="https://picsum.photos/id/180/800/500" alt="Task Manager">
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <div class="project-category">Aplicación</div>
-                            <h4>Task Manager Pro</h4>
-                            <p>Aplicación de gestión de tareas con funcionalidades de Kanban, recordatorios y colaboración en tiempo real.</p>
-                            <div class="tags">
-                                <span>React</span>
-                                <span>Firebase</span>
-                                <span>Redux</span>
-                                <span>PWA</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card" data-category="design web">
-                        <div class="project-img">
-                            <img src="https://picsum.photos/id/26/800/500" alt="Portfolio">
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <div class="project-category">Diseño Web</div>
-                            <h4>Portfolio Interactivo</h4>
-                            <p>Portfolio personal con animaciones interactivas, transiciones suaves y navegación intuitiva.</p>
-                            <div class="tags">
-                                <span>HTML5</span>
-                                <span>CSS3/SASS</span>
-                                <span>JavaScript</span>
-                                <span>GSAP</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card" data-category="app">
-                        <div class="project-img">
-                            <img src="https://picsum.photos/id/21/800/500" alt="Weather App">
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <div class="project-category">Aplicación</div>
-                            <h4>Weather App Premium</h4>
-                            <p>Aplicación de clima con pronósticos detallados, alertas meteorológicas y visualizaciones interactivas.</p>
-                            <div class="tags">
-                                <span>Vue.js</span>
-                                <span>Axios</span>
-                                <span>OpenWeatherAPI</span>
-                                <span>SVG</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-card" data-category="design">
-                        <div class="project-img">
-                            <img src="https://picsum.photos/id/42/800/500" alt="UI Kit">
-                            <div class="project-links">
-                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                            </div>
-                        </div>
-                        <div class="project-info">
-                            <div class="project-category">Diseño</div>
-                            <h4>UI Kit Moderno</h4>
-                            <p>Sistema de diseño completo con componentes reutilizables, guía de estilos y documentación.</p>
-                            <div class="tags">
-                                <span>Figma</span>
-                                <span>StoryBook</span>
-                                <span>Design System</span>
-                                <span>Atomic Design</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- SECCIÓN: HABILIDADES -->
-            <section id="habilidades" class="portfolio-section">
-                <h3>Habilidades Técnicas</h3>
-                <div class="skills-container">
-                    <div class="skills-category">
-                        <h4><i class="fas fa-code"></i> Frontend Development</h4>
-                        <div class="skills-grid">
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>HTML5/CSS3</span>
-                                    <span>95%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 95%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>JavaScript (ES6+)</span>
-                                    <span>90%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 90%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>React</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 85%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Vue.js</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>SASS/LESS</span>
-                                    <span>80%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>TypeScript</span>
-                                    <span>70%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 70%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="skills-category">
-                        <h4><i class="fas fa-server"></i> Backend Development</h4>
-                        <div class="skills-grid">
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Node.js</span>
-                                    <span>80%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Express</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 85%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>PHP</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>MongoDB</span>
-                                    <span>70%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 70%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>MySQL</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>RESTful APIs</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 85%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="skills-category">
-                        <h4><i class="fas fa-tools"></i> Herramientas y Otros</h4>
-                        <div class="skills-grid">
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Git/GitHub</span>
-                                    <span>90%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 90%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Webpack/Vite</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Docker</span>
-                                    <span>65%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 65%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Figma/Adobe XD</span>
-                                    <span>70%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 70%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>Jest/Testing</span>
-                                    <span>65%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 65%"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item">
-                                <div class="skill-info">
-                                    <span>SEO/Optimización</span>
-                                    <span>80%</span>
-                                </div>
-                                <div class="skill-bar">
-                                    <div class="skill-progress" style="width: 80%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- SECCIÓN: CONTACTO -->
-            <section id="contacto" class="portfolio-section">
-                <h3>Contacto</h3>
-                <div class="contact-container">
-                    <div class="contact-info">
-                        <div class="contact-header">
-                            <h4>¿Tienes un proyecto en mente?</h4>
-                            <p>Estoy disponible para trabajos freelance y oportunidades a tiempo completo. ¡Hablemos sobre cómo puedo ayudarte!</p>
-                        </div>
-                        <div class="contact-methods">
-                            <div class="contact-method">
-                                <i class="fas fa-envelope"></i>
-                                <div>
-                                    <h5>Email</h5>
-                                    <p>contacto@davidlaekur.com</p>
-                                </div>
-                            </div>
-                            <div class="contact-method">
-                                <i class="fas fa-phone"></i>
-                                <div>
-                                    <h5>Teléfono</h5>
-                                    <p>+34 600 123 456</p>
-                                </div>
-                            </div>
-                            <div class="contact-method">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div>
-                                    <h5>Ubicación</h5>
-                                    <p>Valencia, España</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="contact-social">
-                            <h5>Sígueme en</h5>
-                            <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="contact-form">
-                        <h4>Envíame un mensaje</h4>
-                        <form id="contact-form">
-                            <div class="form-group">
-                                <label for="name">Nombre</label>
-                                <input type="text" id="name" placeholder="Tu nombre" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" placeholder="Tu email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="subject">Asunto</label>
-                                <input type="text" id="subject" placeholder="Asunto del mensaje">
-                            </div>
-                            <div class="form-group">
-                                <label for="message">Mensaje</label>
-                                <textarea id="message" placeholder="Tu mensaje" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="submit-btn">Enviar Mensaje</button>
-                        </form>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
+            </div>
+        </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Variables
-            const logo = document.querySelector('.profile-logo');
-            const switchBtn = document.getElementById('switch');
-            const portfolioNavLinks = document.querySelectorAll('.portfolio-nav a');
-            const portfolioSections = document.querySelectorAll('.portfolio-section');
-            const backBtn = document.querySelector('.back-to-animation');
-            let portfolioTimer = null;
-            
-            console.log('Logo encontrado:', !!logo);
-            console.log('Portfolio container:', document.querySelector('.portfolio-container'));
-            
-            // LOGO - mostrar/ocultar portfolio
-            if (logo) {
-                logo.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.body.classList.add('hide-animation');
-                    return false;
-                });
-            }
-            
-            // BOTÓN VOLVER
-            if (backBtn) {
-                backBtn.addEventListener('click', function() {
-                    document.body.classList.remove('hide-animation');
-                    // Si la animación está apagada, enciéndela
-                    if (document.body.classList.contains('fire-off')) {
-                        document.body.classList.remove('fire-off');
-                        switchBtn.classList.remove('switched');
-                    }
-                });
-            }
-            
-            // SWITCH con temporizador para portfolio
-            if (switchBtn) {
-                switchBtn.addEventListener('click', function() {
-                    document.body.classList.toggle('fire-off');
-                    this.classList.toggle('switched');
-                    
-                    // Si se apaga la animación, programar la apertura del portfolio
-                    if (document.body.classList.contains('fire-off')) {
-                        // Notificar al usuario con cuenta regresiva
-                        showNotification("Entrando al portfolio en 3 segundos...");
-                        
-                        // Cancelar cualquier temporizador existente
-                        if (portfolioTimer) clearTimeout(portfolioTimer);
-                        
-                        // Configurar nuevo temporizador (3 segundos)
-                        portfolioTimer = setTimeout(function() {
-                            document.body.classList.add('hide-animation');
-                        }, 3000);
-                    } else {
-                        // Si se enciende la animación, cancelar el temporizador
-                        if (portfolioTimer) {
-                            clearTimeout(portfolioTimer);
-                            portfolioTimer = null;
-                        }
-                        
-                        // Cancelar cualquier cuenta regresiva activa
-                        const notification = document.querySelector('.portfolio-notification');
-                        if (notification && notification.dataset.countdownId) {
-                            clearInterval(parseInt(notification.dataset.countdownId));
-                            notification.classList.remove('show');
-                        }
-                    }
-                });
-            }
-            
-            // NAVEGACIÓN PORTFOLIO
-            portfolioNavLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    portfolioNavLinks.forEach(item => item.classList.remove('active'));
-                    portfolioSections.forEach(item => item.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    const targetId = this.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
-                    
-                    if (targetSection) {
-                        targetSection.classList.add('active');
-                    }
-                });
-            });
-            
-            // Función mejorada para mostrar notificación con cuenta atrás
-            function showNotification(message) {
-                // Crear notificación si no existe
-                let notification = document.querySelector('.portfolio-notification');
-                if (!notification) {
-                    notification = document.createElement('div');
-                    notification.className = 'portfolio-notification';
-                    document.body.appendChild(notification);
-                }
-                
-                // Extraer el número de segundos del mensaje (asumiendo formato "... en X segundos...")
-                let secondsText = message.match(/\d+/);
-                let seconds = secondsText ? parseInt(secondsText[0]) : 3;
-                let baseMessage = "Entrando al portfolio en ";
-                
-                // Mostrar mensaje inicial
-                notification.textContent = baseMessage + seconds + " segundos...";
-                notification.classList.add('show');
-                
-                // Iniciar cuenta regresiva
-                let countdownInterval = setInterval(function() {
-                    seconds--;
-                    
-                    if (seconds > 0) {
-                        // Actualizar texto con segundos restantes
-                        notification.textContent = baseMessage + seconds + " segundos...";
-                    } else if (seconds === 0) {
-                        // Último segundo
-                        notification.textContent = "¡Entrando ahora!";
-                    } else {
-                        // Limpiar intervalo y ocultar notificación
-                        clearInterval(countdownInterval);
-                        notification.classList.remove('show');
-                    }
-                }, 1000);
-                
-                // Guardar el ID del intervalo en la notificación para poder cancelarlo
-                notification.dataset.countdownId = countdownInterval;
+        <!-- EXPERIENCIA -->
+        <section id="experiencia" class="portfolio-section">
+            <h3>Experiencia</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2024 - 2025 · Prácticas</div>
+                    <div class="timeline-content">
+                        <h4>Desarrollador Web en Prácticas</h4>
+                        <h5>Empresa de prácticas · Valencia</h5>
+                        <p>Participé en el desarrollo y mantenimiento de aplicaciones web durante el módulo de FCT del ciclo superior DAW.</p>
+                        <ul class="timeline-responsibilities">
+                            <li>Desarrollo de interfaces web responsivas</li>
+                            <li>Integración con APIs REST</li>
+                            <li>Trabajo en equipo con metodología ágil</li>
+                        </ul>
+                        <div class="tags">
+                            <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>PHP</span><span>MySQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FORMACIÓN -->
+        <section id="formacion" class="portfolio-section">
+            <h3>Formación</h3>
+            <div class="education-grid">
+                <div class="education-item">
+                    <div class="education-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="education-content">
+                        <div class="education-year">2023 - 2025</div>
+                        <h4>Grado Superior en Desarrollo de Aplicaciones Web</h4>
+                        <h5>CEEDCV · Valencia</h5>
+                        <p>Formación completa en desarrollo web fullstack, bases de datos, despliegue y metodologías de desarrollo.</p>
+                        <div class="tags">
+                            <span>JavaScript</span><span>PHP</span><span>Java</span><span>SQL</span><span>HTML</span><span>CSS</span><span>React</span><span>Node.js</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROYECTOS -->
+        <section id="proyectos" class="portfolio-section">
+            <h3>Proyectos</h3>
+            <div class="projects-filter">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="web">Web</button>
+                <button class="filter-btn" data-filter="app">Aplicaciones</button>
+                <button class="filter-btn" data-filter="design">Diseño</button>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card" data-category="web app">
+                    <div class="project-img">
+                        <img src="https://picsum.photos/id/43/800/500" alt="Dashboard App">
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">Web App</div>
+                        <h4>Dashboard Analytics</h4>
+                        <p>Panel administrativo con gráficos interactivos y sistema de notificaciones en tiempo real.</p>
+                        <div class="tags"><span>React</span><span>Node.js</span><span>Chart.js</span></div>
+                    </div>
+                </div>
+                <div class="project-card" data-category="web">
+                    <div class="project-img">
+                        <img src="https://picsum.photos/id/160/800/500" alt="E-commerce">
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">Web</div>
+                        <h4>E-commerce</h4>
+                        <p>Tienda online con sistema de pagos, carrito y panel de administración.</p>
+                        <div class="tags"><span>PHP</span><span>MySQL</span><span>JavaScript</span></div>
+                    </div>
+                </div>
+                <div class="project-card" data-category="app">
+                    <div class="project-img">
+                        <img src="https://picsum.photos/id/180/800/500" alt="Task Manager">
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">Aplicación</div>
+                        <h4>Task Manager</h4>
+                        <p>Gestión de tareas con tablero Kanban y colaboración en tiempo real.</p>
+                        <div class="tags"><span>React</span><span>Firebase</span></div>
+                    </div>
+                </div>
+                <div class="project-card" data-category="design web">
+                    <div class="project-img">
+                        <img src="https://picsum.photos/id/26/800/500" alt="Portfolio">
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">Diseño Web</div>
+                        <h4>Portfolio Interactivo</h4>
+                        <p>Este mismo portfolio con animaciones y efectos visuales personalizados.</p>
+                        <div class="tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HABILIDADES -->
+        <section id="habilidades" class="portfolio-section">
+            <h3>Habilidades</h3>
+            <div class="skills-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#ff6b6b"></div> Avanzado</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#ffb347"></div> Intermedio</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.3)"></div> Aprendiendo</div>
+            </div>
+            <div class="skills-container">
+                <div class="skills-category">
+                    <h4><i class="fas fa-code"></i> Frontend</h4>
+                    <div class="skills-chips">
+                        <div class="skill-chip advanced"><div class="skill-dot"></div> HTML5</div>
+                        <div class="skill-chip advanced"><div class="skill-dot"></div> CSS3</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> JavaScript</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> React</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> SASS</div>
+                        <div class="skill-chip learning"><div class="skill-dot"></div> TypeScript</div>
+                        <div class="skill-chip learning"><div class="skill-dot"></div> Vue.js</div>
+                    </div>
+                </div>
+                <div class="skills-category">
+                    <h4><i class="fas fa-server"></i> Backend</h4>
+                    <div class="skills-chips">
+                        <div class="skill-chip mid"><div class="skill-dot"></div> PHP</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> MySQL</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> Node.js</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> REST APIs</div>
+                        <div class="skill-chip learning"><div class="skill-dot"></div> MongoDB</div>
+                        <div class="skill-chip learning"><div class="skill-dot"></div> Express</div>
+                    </div>
+                </div>
+                <div class="skills-category">
+                    <h4><i class="fas fa-tools"></i> Herramientas</h4>
+                    <div class="skills-chips">
+                        <div class="skill-chip mid"><div class="skill-dot"></div> Git / GitHub</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> VS Code</div>
+                        <div class="skill-chip mid"><div class="skill-dot"></div> Figma</div>
+                        <div class="skill-chip learning"><div class="skill-dot"></div> Docker</div>
+                        <div class="skill-chip learning"><div class="skill-dot"></div> Vite</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACTO -->
+        <section id="contacto" class="portfolio-section">
+            <h3>Contacto</h3>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-header">
+                        <h4>¿Tienes un proyecto?</h4>
+                        <p>Disponible para proyectos freelance en Valencia y remoto. Precios accesibles y trato directo.</p>
+                    </div>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div><h5>Email</h5><p>contacto@davidlaekur.com</p></div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div><h5>Ubicación</h5><p>Valencia, España</p></div>
+                        </div>
+                    </div>
+                    <div class="contact-social">
+                        <h5>Encuéntrame en</h5>
+                        <div class="social-links">
+                            <a href="https://github.com/davidlaekur" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h4>Escríbeme</h4>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" placeholder="Tu nombre">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" placeholder="Tu email">
+                    </div>
+                    <div class="form-group">
+                        <label>Mensaje</label>
+                        <textarea placeholder="Cuéntame tu proyecto..." rows="5"></textarea>
+                    </div>
+                    <button class="submit-btn">Enviar mensaje</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ===== MATRIX CANVAS ===== */
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const chars = '01{}[]<>/\\;:=+-*&|abcdefghijklmnopqrstuvwxyz'.split('');
+    const fontSize = 13;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = Array(cols).fill(1);
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(7, 13, 20, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ff9400';
+        ctx.font = fontSize + 'px monospace';
+        drops.forEach((y, i) => {
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, y * fontSize);
+            if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
+    }
+
+    setInterval(drawMatrix, 55);
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    /* ===== TYPEWRITER ===== */
+    const phrases = [
+        'Desarrollador Full Stack Junior',
+        'Disponible para freelance · Valencia',
+        'HTML · CSS · JavaScript · PHP',
+        'Construyendo cosas reales 🚀'
+    ];
+    let pi = 0, ci = 0, deleting = false;
+    const tw = document.getElementById('typewriter');
+
+    function type() {
+        const current = phrases[pi];
+        tw.textContent = deleting ? current.substring(0, ci--) : current.substring(0, ci++);
+        if (!deleting && ci > current.length) { deleting = true; setTimeout(type, 1800); return; }
+        if (deleting && ci < 0) { deleting = false; pi = (pi + 1) % phrases.length; ci = 0; }
+        setTimeout(type, deleting ? 40 : 70);
+    }
+    type();
+
+    /* ===== SWITCH ===== */
+    const switchBtn = document.getElementById('switch');
+    let timer = null;
+
+    switchBtn.addEventListener('click', function () {
+        this.classList.toggle('switched');
+        if (this.classList.contains('switched')) {
+            showNotification('Cargando portfolio...');
+            timer = setTimeout(() => document.body.classList.add('hide-animation'), 1200);
+        } else {
+            clearTimeout(timer);
+        }
+    });
+
+    /* ===== BOTÓN VOLVER ===== */
+    document.querySelector('.back-to-animation').addEventListener('click', function () {
+        document.body.classList.remove('hide-animation');
+        switchBtn.classList.remove('switched');
+    });
+
+    /* ===== NAVEGACIÓN PORTFOLIO ===== */
+    document.querySelectorAll('.portfolio-nav a').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelectorAll('.portfolio-nav a').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.portfolio-section').forEach(s => s.classList.remove('active'));
+            this.classList.add('active');
+            const target = document.getElementById(this.getAttribute('href').substring(1));
+            if (target) {
+                target.classList.add('active');
+                document.getElementById('portfolio').scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
-    </script>
+    });
+
+    /* ===== FILTRO PROYECTOS ===== */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const filter = this.dataset.filter;
+            document.querySelectorAll('.project-card').forEach(card => {
+                const cat = card.dataset.category || '';
+                card.classList.toggle('hidden', filter !== 'all' && !cat.includes(filter));
+            });
+        });
+    });
+
+    /* ===== NOTIFICACIÓN ===== */
+    function showNotification(msg) {
+        let n = document.querySelector('.portfolio-notification');
+        if (!n) { n = document.createElement('div'); n.className = 'portfolio-notification'; document.body.appendChild(n); }
+        n.textContent = msg;
+        n.classList.add('show');
+        setTimeout(() => n.classList.remove('show'), 2000);
+    }
+
+});
+</script>
 </body>
 </html>
