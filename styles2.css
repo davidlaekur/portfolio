@@ -42,7 +42,7 @@
     --color-accent-2: rgb(var(--accent-2-rgb));
     --color-accent-soft: rgba(var(--accent-rgb), 0.08);
     --color-accent-border: rgba(var(--accent-rgb), 0.22);
-    --gradient-warm: linear-gradient(45deg, rgb(var(--accent-2-rgb)), rgb(var(--sun-rgb)));
+    --gradient-warm: linear-gradient(135deg, rgb(var(--sea-rgb)), rgb(var(--turquoise-rgb)));
 
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -300,8 +300,8 @@ body.is-portfolio-open .landing {
 }
 
 .switch.is-on {
-    border-color: rgba(var(--terracotta-rgb), 0.9);
-    background: var(--color-accent-2);
+    border-color: rgba(var(--turquoise-rgb), 0.9);
+    background: rgb(var(--turquoise-rgb));
 }
 
 .switch.is-on .switch__circle {
