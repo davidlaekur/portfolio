@@ -53,10 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const spawn = () => {
             const text = phrases[Math.floor(Math.random() * phrases.length)];
-            const fontSize = 12 + Math.floor(Math.random() * 6);
-            const margin = 100;
-            const x = margin + Math.random() * (canvas.width - margin * 2);
-            const y = margin + Math.random() * (canvas.height - margin * 2);
+            const fontSize = Math.round(canvas.width * 0.013) + 4;
+            ctx.font = `italic ${fontSize}px Georgia, serif`;
+            const textW = ctx.measureText(text).width;
+            const margin = 80;
+            const maxX = canvas.width - margin - textW;
+            const maxY = canvas.height - margin;
+            if (maxX < margin || maxY < margin + fontSize) return;
+            const x = margin + Math.random() * (maxX - margin);
+            const y = margin + fontSize + Math.random() * (maxY - margin - fontSize);
+
+            const gap = fontSize * 2.5;
+            const overlaps = fragments.some(f =>
+                Math.abs(f.x - x) < textW && Math.abs(f.y - y) < gap
+            );
+            if (overlaps) return;
+
             fragments.push({ text, x, y, fontSize, opacity: 0, state: 'in', hold: 0 });
         };
 
