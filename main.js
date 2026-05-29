@@ -20,94 +20,99 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =====================================================
-       CODEX DA VINCI
-       Fragmentos reales de los cuadernos de Leonardo da Vinci.
-       Aparecen y desaparecen suavemente como páginas de sus
-       manuscritos: Codex Atlanticus, Codex Leicester, etc.
+       HOMENAJE A GAUDÍ — Catenarias
+       Gaudí diseñaba sus estructuras con maquetas de cuerdas
+       colgantes (la "maqueta polifunicular"). Cada cuerda
+       describe una catenaria: y = a·cosh(x/a). Invertida, es
+       el arco perfecto. Aquí las dibujamos a ambos lados,
+       dejando el centro libre para la presentación.
        ===================================================== */
-    const initCodex = () => {
+    const initGaudi = () => {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
 
-        const phrases = [
-            "saper vedere",
-            "ostinato rigore",
-            "l'acqua è il vetturale della natura",
-            "l'acqua disfa li monti e riempie le valli",
-            "il volo degli uccelli",
-            "la luce e l'ombra",
-            "la meccanica è il paradiso delle scienze matematiche",
-            "la pittura è una poesia muta",
-            "il sole non si muove",
-            "l'occhio è la finestra dell'anima",
-            "dove la natura finisce, lì comincia l'arte",
-            "ogni ostacolo è distrutto dall'ardore"
+        // Paleta trencadís (mosaicos del Park Güell)
+        const colors = [
+            'rgba(255, 179, 71, ALPHA)',   // ámbar
+            'rgba(255, 107, 107, ALPHA)',  // coral
+            'rgba(122, 197, 205, ALPHA)',  // turquesa
+            'rgba(255, 210, 122, ALPHA)',  // dorado
+            'rgba(180, 142, 173, ALPHA)'   // lila
         ];
 
-        let fragments = [];
+        let arcs = [];
+        let t = 0;
+
+        const buildSide = (originX, dir, count) => {
+            // dir = +1 (lado derecho) o -1 (lado izquierdo)
+            const list = [];
+            for (let i = 0; i < count; i++) {
+                const span = 90 + i * 55;          // ancho del arco
+                const a = 70 + Math.random() * 60;  // tensión de la catenaria
+                const anchorY = canvas.height * (0.12 + Math.random() * 0.76);
+                list.push({
+                    originX,
+                    dir,
+                    span,
+                    a,
+                    anchorY,
+                    color: colors[i % colors.length],
+                    phase: Math.random() * Math.PI * 2,
+                    amp: 4 + Math.random() * 6
+                });
+            }
+            return list;
+        };
+
+        const buildArcs = () => {
+            const n = canvas.width < 768 ? 3 : 6;
+            arcs = [
+                ...buildSide(0, 1, n),                 // pegado al borde izquierdo
+                ...buildSide(canvas.width, -1, n)      // pegado al borde derecho
+            ];
+        };
 
         const resize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        };
-
-        const spawn = () => {
-            const text = phrases[Math.floor(Math.random() * phrases.length)];
-            const fontSize = Math.round(canvas.width * 0.013) + 4;
-            ctx.font = `italic ${fontSize}px Georgia, serif`;
-            const textW = ctx.measureText(text).width;
-            const margin = 80;
-            const maxX = canvas.width - margin - textW;
-            const maxY = canvas.height - margin;
-            if (maxX < margin || maxY < margin + fontSize) return;
-            const x = margin + Math.random() * (maxX - margin);
-            const y = margin + fontSize + Math.random() * (maxY - margin - fontSize);
-
-            const gap = fontSize * 2.5;
-            const overlaps = fragments.some(f =>
-                Math.abs(f.x - x) < textW && Math.abs(f.y - y) < gap
-            );
-            if (overlaps) return;
-
-            fragments.push({ text, x, y, fontSize, opacity: 0, state: 'in', hold: 0 });
+            buildArcs();
         };
 
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            t += 0.01;
 
-            for (let i = fragments.length - 1; i >= 0; i--) {
-                const f = fragments[i];
-                if (f.state === 'in') {
-                    f.opacity += 0.003;
-                    if (f.opacity >= 0.28) { f.opacity = 0.28; f.state = 'hold'; }
-                } else if (f.state === 'hold') {
-                    f.hold++;
-                    if (f.hold > 160) f.state = 'out';
-                } else {
-                    f.opacity -= 0.002;
-                    if (f.opacity <= 0) { fragments.splice(i, 1); continue; }
+            for (const arc of arcs) {
+                // leve balanceo, como cuerdas que cuelgan
+                const sway = Math.sin(t + arc.phase) * arc.amp;
+                ctx.beginPath();
+                const steps = 40;
+                for (let s = 0; s <= steps; s++) {
+                    const px = (s / steps) * arc.span;            // 0 → span
+                    const local = px - arc.span / 2;              // centrado
+                    // catenaria invertida (arco): cae desde el ancla
+                    const y = arc.anchorY + arc.a * Math.cosh(local / arc.a) - arc.a + sway;
+                    const x = arc.originX + arc.dir * px;
+                    if (s === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
-                ctx.fillStyle = `rgba(255, 210, 122, ${f.opacity})`;
-                ctx.font = `italic ${f.fontSize}px Georgia, serif`;
-                ctx.fillText(f.text, f.x, f.y);
+                ctx.strokeStyle = arc.color.replace('ALPHA', '0.22');
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
             }
-
-            if (fragments.length < 8 && Math.random() > 0.985) spawn();
         };
-
-        for (let i = 0; i < 5; i++) spawn();
 
         resize();
         window.addEventListener('resize', resize);
-        setInterval(draw, 50);
+        setInterval(draw, 33);
     };
 
     /* ---------- Typewriter ---------- */
     const initTypewriter = () => {
         const phrases = [
-            'Desarrollador Full Stack Junior',
-            'Disponible para freelance · Valencia',
+            'Desarrollador Full Stack · Valencia',
             'Laravel · PHP · JavaScript · MySQL',
+            '«La originalidad es volver al origen» — Gaudí',
             'Construyendo cosas reales 🚀'
         ];
         const target = document.getElementById('typewriter');
@@ -180,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ---------- Init ---------- */
-    initCodex();
+    initGaudi();
     initTypewriter();
     initToggle();
     initInternalLinks();
