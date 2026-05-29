@@ -61,10 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Curva orgánica de la cresta superior de la banda (ondas Batlló)
         const crestY = (x, w, h) => {
-            const base = h * 0.80;
+            const base = h * 0.72;
             return base
-                + Math.sin(x / w * Math.PI * 3) * h * 0.05
-                + Math.sin(x / w * Math.PI * 7 + 1.5) * h * 0.022;
+                + Math.sin(x / w * Math.PI * 3) * h * 0.06
+                + Math.sin(x / w * Math.PI * 7 + 1.5) * h * 0.025;
         };
 
         const buildTiles = () => {
