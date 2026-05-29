@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =====================================================
-       LLUVIA EN ESCRITURA ESPECULAR
-       Homenaje a la escritura en espejo de Leonardo da Vinci.
-       Las frases doradas son de sus manuscritos reales.
+       LLUVIA DE CÓDIGO
+       Las frases doradas son citas reales de los cuadernos
+       de Leonardo da Vinci.
        ===================================================== */
     const initMatrix = () => {
         const canvas = document.getElementById('matrix-canvas');
@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
             phraseCol = Array(columns).fill(null);
         };
 
-        const drawMirror = (text, x, y) => {
-            ctx.save();
-            ctx.translate(x + fontSize, y);
-            ctx.scale(-1, 1);
-            ctx.fillText(text, 0, 0);
-            ctx.restore();
-        };
-
         const draw = () => {
             ctx.fillStyle = 'rgba(7, 13, 20, 0.06)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -68,12 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const p = phraseCol[i];
                     const char = p.text[p.index] || ' ';
                     ctx.fillStyle = '#ffd27a';
-                    drawMirror(char, x, y);
+                    ctx.fillText(char, x, y);
                     p.index++;
                     if (p.index >= p.text.length) phraseCol[i] = null;
                 } else {
                     ctx.fillStyle = '#ff9400';
-                    drawMirror(glyphs[Math.floor(Math.random() * glyphs.length)], x, y);
+                    ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], x, y);
                 }
 
                 if (y > canvas.height && Math.random() > 0.975) {
@@ -90,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resize();
         window.addEventListener('resize', resize);
-        setInterval(draw, 60);
+        setInterval(draw, 120);
     };
 
     /* ---------- Typewriter ---------- */
