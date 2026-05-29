@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'Desarrollador Full Stack · Valencia',
             'Laravel · PHP · JavaScript · MySQL',
             '«La originalidad es volver al origen» — Gaudí',
-            'Construyendo cosas reales 🚀'
+            'Construyendo cosas reales'
         ];
         const target = document.getElementById('typewriter');
         let pi = 0, ci = 0, deleting = false;
