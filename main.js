@@ -32,16 +32,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById('gaudi-canvas');
         const ctx = canvas.getContext('2d');
 
-        // Paleta marina de la Casa Batlló (vibrante)
-        const palette = [
-            [54, 140, 180],   // azul mar
-            [70, 170, 200],   // azul cielo
-            [90, 200, 205],   // turquesa
-            [120, 215, 195],  // verde agua
-            [165, 225, 200],  // verde claro
-            [240, 160, 100],  // coral/terracota (destellos)
-            [250, 205, 120]   // dorado arena
+        // Trencadís Casa Batlló: gradiente real de su fachada.
+        // Abajo (base): azules profundos del mar. Arriba (cresta):
+        // tonos cálidos como las escamas del tejado-dragón.
+        const coolColors = [    // zona inferior — mar
+            [26, 110, 158],   // azul mar profundo
+            [40, 140, 180],   // azul
+            [40, 180, 175],   // turquesa
+            [90, 200, 195],   // turquesa claro
+            [120, 190, 130]   // verde clorofila
         ];
+        const warmColors = [    // zona superior — tejado dragón
+            [120, 190, 130],  // verde (transición)
+            [232, 196, 90],   // amarillo sol
+            [240, 165, 80],   // ámbar
+            [214, 102, 64],   // terracota
+            [206, 92, 110]    // rosa cerámica
+        ];
+        const pick = (depth) => {
+            // depth 1 = abajo (frío), depth 0 = arriba (cálido)
+            const pool = depth > 0.45 ? coolColors : warmColors;
+            return pool[Math.floor(Math.random() * pool.length)];
+        };
 
         let tiles = [];
         let startTime = null;        // marca de inicio para la construcción
@@ -67,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let gy = top; gy < h + cell; gy += cell) {
                     if (gy < crestY(gx, w, h)) continue;
                     const depth = (gy - top) / (h - top);   // 0 arriba → 1 abajo
-                    const col = palette[Math.floor(Math.random() * palette.length)];
+                    const col = pick(depth);
                     const jx = () => (Math.random() - 0.5) * jitter;
                     const jy = () => (Math.random() - 0.5) * jitter;
                     const cx = gx + cell / 2;
@@ -82,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ],
                         cx, cy,
                         col,
-                        base: Math.min(0.94, 0.58 + depth * 0.36),
+                        base: Math.min(1, 0.82 + depth * 0.18),
                         shimmer: Math.random() * Math.PI * 2,
                         // retardo de aparición: de abajo hacia arriba + algo aleatorio
                         delay: (1 - depth) * BUILD_MS * 0.7 + Math.random() * BUILD_MS * 0.3
@@ -132,8 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const lift = glow * 95;
                 ctx.fillStyle = `rgba(${r + lift}, ${g + lift}, ${b + lift}, ${alpha})`;
                 ctx.fill();
-                ctx.strokeStyle = `rgba(6, 17, 25, ${0.6 * grow})`;
-                ctx.lineWidth = 1.5;
+                // junta de mortero clara (cerámica sobre pared perla)
+                ctx.strokeStyle = `rgba(247, 241, 230, ${0.85 * grow})`;
+                ctx.lineWidth = 2;
                 ctx.stroke();
             }
         };
