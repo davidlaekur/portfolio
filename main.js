@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const render = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(255, 210, 122, 0.22)';
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(255, 210, 122, 0.5)';
+            ctx.lineWidth = 1.5;
             ctx.lineCap = 'round';
 
             let drawn = 0;
@@ -157,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         start();
         window.addEventListener('resize', start);
+        return start;
     };
 
     /* =====================================================
@@ -278,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backBtn.addEventListener('click', () => {
             document.body.classList.remove('is-portfolio-open');
             switchBtn.classList.remove('is-on');
+            vitruvianStart();
         });
     };
 
@@ -303,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ---------- Init ---------- */
-    initVitruvian();
+    const vitruvianStart = initVitruvian();
     initMatrix();
     initTypewriter();
     initToggle();
