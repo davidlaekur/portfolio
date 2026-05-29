@@ -44,9 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const buildStrokes = () => {
             const w = canvas.width;
             const h = canvas.height;
-            const cx = w / 2;
+            const mobile = w < 900;
+            const cx = mobile ? w / 2 : w * 0.74;
             const cy = h / 2;
-            const R = Math.min(w, h) * 0.28;
+            const R = mobile
+                ? Math.min(w, h) * 0.20
+                : Math.min(w * 0.22, h * 0.42);
             const side = R * 1.64;
             const half = side / 2;
 
