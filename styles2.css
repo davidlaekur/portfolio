@@ -1255,6 +1255,47 @@ body.is-portfolio-open .portfolio {
     color: var(--color-text-muted);
 }
 
+/* cita destacada de cierre */
+.gaudi-quote {
+    position: relative;
+    max-width: 760px;
+    margin: 48px auto 0;
+    padding: 40px 32px 0;
+    text-align: center;
+}
+
+/* arco catenario sobre la cita (cuerda colgante invertida) */
+.gaudi-quote::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 22px;
+    border-bottom: 2px solid var(--color-accent-border);
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+.gaudi-quote p {
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.4;
+    background: linear-gradient(90deg, rgb(var(--sea-rgb)), rgb(var(--terracotta-rgb)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gaudi-quote cite {
+    display: block;
+    margin-top: 14px;
+    font-style: normal;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    color: var(--color-text-dim);
+}
+
 /* =========================================================
    RESPONSIVE
    ========================================================= */
