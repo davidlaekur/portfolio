@@ -13,8 +13,8 @@
     --color-surface-hover: rgba(255, 255, 255, 0.05);
     --color-border: rgba(255, 255, 255, 0.07);
     --color-text: #ffffff;
-    --color-text-muted: rgba(255, 255, 255, 0.7);
-    --color-text-dim: rgba(255, 255, 255, 0.5);
+    --color-text-muted: rgba(255, 255, 255, 0.82);
+    --color-text-dim: rgba(255, 255, 255, 0.62);
 
     /* Acento turquesa + secundario coral (RGB para usar con alpha) */
     --accent-rgb: 70, 200, 205;
@@ -72,6 +72,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-bottom: 12vh;       /* deja el trencadís inferior despejado */
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
@@ -90,9 +91,9 @@ body.is-portfolio-open .landing {
     width: 90%;
     padding: 48px 56px;
     border-radius: var(--radius-lg);
-    background: rgba(6, 17, 25, 0.78);
+    background: #0a1722;
     border: 1px solid var(--color-accent-border);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
 .landing__media {
@@ -448,33 +449,46 @@ body.is-portfolio-open .portfolio {
 }
 
 .btn {
-    padding: 10px 22px;
+    padding: 11px 26px;
     border-radius: var(--radius-pill);
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
     text-align: center;
+    cursor: pointer;
+    font-family: var(--font-base);
     transition: var(--transition);
 }
 
+/* Botón principal: contorno turquesa que se rellena al hover */
 .btn--primary {
-    background: var(--gradient-warm);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-family: var(--font-base);
+    background: transparent;
+    border: 1.5px solid var(--color-accent);
+    color: var(--color-accent);
 }
 
+.btn--primary:hover {
+    background: var(--color-accent);
+    color: #06141d;
+    box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.35);
+}
+
+/* Botón secundario: contorno tenue neutro */
 .btn--ghost {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: #fff;
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    color: var(--color-text);
+}
+
+.btn--ghost:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
 .btn--block {
     display: block;
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
     font-weight: 600;
@@ -482,7 +496,6 @@ body.is-portfolio-open .portfolio {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
 /* ---------- Sobre mí ---------- */

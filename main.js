@@ -44,45 +44,48 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         let tiles = [];
-        let t = 0;
+        let startTime = null;        // marca de inicio para la construcción
+        const BUILD_MS = 1600;       // duración de la construcción del mosaico
 
         // Curva orgánica de la cresta superior de la banda (ondas Batlló)
         const crestY = (x, w, h) => {
-            const base = h * 0.62;
+            const base = h * 0.66;
             return base
-                + Math.sin(x / w * Math.PI * 3) * h * 0.10
-                + Math.sin(x / w * Math.PI * 7 + 1.5) * h * 0.04;
+                + Math.sin(x / w * Math.PI * 3) * h * 0.09
+                + Math.sin(x / w * Math.PI * 7 + 1.5) * h * 0.035;
         };
 
         const buildTiles = () => {
             tiles = [];
             const w = canvas.width;
             const h = canvas.height;
-            const cell = w < 768 ? 26 : 34;   // tamaño aprox. de tesela
-            const jitter = cell * 0.32;
+            const cell = w < 768 ? 24 : 32;   // tamaño aprox. de tesela
+            const jitter = cell * 0.34;
 
             for (let gx = -cell; gx < w + cell; gx += cell) {
                 const top = crestY(gx, w, h);
                 for (let gy = top; gy < h + cell; gy += cell) {
-                    // saltar algunas para que el borde superior sea irregular
                     if (gy < crestY(gx, w, h)) continue;
                     const depth = (gy - top) / (h - top);   // 0 arriba → 1 abajo
                     const col = palette[Math.floor(Math.random() * palette.length)];
-                    // vértices irregulares de cerámica rota
                     const jx = () => (Math.random() - 0.5) * jitter;
                     const jy = () => (Math.random() - 0.5) * jitter;
+                    const cx = gx + cell / 2;
+                    const cy = gy + cell / 2;
                     tiles.push({
-                        pts: [
-                            [gx + jx(), gy + jy()],
-                            [gx + cell + jx(), gy + jy()],
-                            [gx + cell + jx(), gy + cell + jy()],
-                            [gx + jx(), gy + cell + jy()]
+                        // vértices relativos al centro (para poder escalar al construir)
+                        rel: [
+                            [-cell / 2 + jx(), -cell / 2 + jy()],
+                            [ cell / 2 + jx(), -cell / 2 + jy()],
+                            [ cell / 2 + jx(),  cell / 2 + jy()],
+                            [-cell / 2 + jx(),  cell / 2 + jy()]
                         ],
+                        cx, cy,
                         col,
-                        cx: gx + cell / 2,
-                        // sólidas abajo, se difuminan suavemente solo en el borde superior
-                        base: Math.min(0.92, 0.55 + depth * 0.4),
-                        shimmer: Math.random() * Math.PI * 2
+                        base: Math.min(0.94, 0.58 + depth * 0.36),
+                        shimmer: Math.random() * Math.PI * 2,
+                        // retardo de aparición: de abajo hacia arriba + algo aleatorio
+                        delay: (1 - depth) * BUILD_MS * 0.7 + Math.random() * BUILD_MS * 0.3
                     });
                 }
             }
@@ -94,46 +97,55 @@ document.addEventListener('DOMContentLoaded', () => {
             buildTiles();
         };
 
-        const draw = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            t += 0.012;
+        // easing suave para el encaje de cada tesela
+        const easeOut = (k) => 1 - Math.pow(1 - k, 3);
 
-            // reflejo de luz que recorre el mosaico (banda vertical suave)
-            const lightX = ((t * 60) % (canvas.width + 600)) - 300;
+        const draw = (now) => {
+            if (startTime === null) startTime = now;
+            const elapsed = now - startTime;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const t = elapsed / 1000;
+            // reflejo de luz que recorre el mosaico, solo tras construirse
+            const lightX = ((t * 55) % (canvas.width + 600)) - 300;
 
             for (const tile of tiles) {
+                // progreso de construcción de esta tesela (0 → 1)
+                const local = (elapsed - tile.delay) / 420;
+                if (local <= 0) continue;                 // aún no aparece
+                const grow = easeOut(Math.min(1, local)); // escala al encajar
+
                 const [r, g, b] = tile.col;
-                // brillo extra cerca del reflejo móvil
                 const dist = Math.abs(tile.cx - lightX);
-                const glow = Math.max(0, 1 - dist / 260) * 0.35;
-                const pulse = (Math.sin(t * 1.5 + tile.shimmer) + 1) * 0.05;
-                const alpha = Math.min(0.95, tile.base + glow + pulse);
+                const glow = grow >= 1 ? Math.max(0, 1 - dist / 240) * 0.4 : 0;
+                const pulse = grow >= 1 ? (Math.sin(t * 1.4 + tile.shimmer) + 1) * 0.05 : 0;
+                const alpha = Math.min(0.96, tile.base * grow + glow + pulse);
 
                 ctx.beginPath();
-                ctx.moveTo(tile.pts[0][0], tile.pts[0][1]);
-                for (let i = 1; i < tile.pts.length; i++) {
-                    ctx.lineTo(tile.pts[i][0], tile.pts[i][1]);
+                for (let i = 0; i < tile.rel.length; i++) {
+                    const px = tile.cx + tile.rel[i][0] * grow;
+                    const py = tile.cy + tile.rel[i][1] * grow;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
                 }
                 ctx.closePath();
-                // tesela con brillo hacia el blanco según el reflejo
-                const lift = glow * 90;
+                const lift = glow * 95;
                 ctx.fillStyle = `rgba(${r + lift}, ${g + lift}, ${b + lift}, ${alpha})`;
                 ctx.fill();
-                // junta de mortero entre teselas
-                ctx.strokeStyle = 'rgba(7, 13, 20, 0.55)';
+                ctx.strokeStyle = `rgba(6, 17, 25, ${0.6 * grow})`;
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
             }
         };
 
-        const loop = () => {
-            draw();
+        const loop = (now) => {
+            draw(now);
             requestAnimationFrame(loop);
         };
 
         resize();
-        window.addEventListener('resize', resize);
-        loop();
+        window.addEventListener('resize', () => { resize(); startTime = null; });
+        requestAnimationFrame(loop);
     };
 
     /* ---------- Typewriter ---------- */
