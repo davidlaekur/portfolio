@@ -936,19 +936,27 @@ body.is-portfolio-open .portfolio {
 
 .project__links {
     position: absolute;
-    bottom: -50px;
-    left: 0;
-    width: 100%;
+    z-index: 3;                 /* por encima del arco catenario (::after) */
+    top: 12px;
+    right: 12px;
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 0;
-    background: linear-gradient(to top, rgba(var(--ink-rgb), 0.85), transparent);
+    gap: 8px;
     transition: var(--transition);
 }
 
-.project:hover .project__links {
-    bottom: 0;
+.project__links .icon-circle {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--color-accent-border);
+    color: var(--color-accent);
+    box-shadow: 0 2px 8px rgba(var(--ink-rgb), 0.15);
+}
+
+.project__links .icon-circle:hover {
+    background: var(--color-accent);
+    color: #fff;
+    transform: translateY(-2px);
 }
 
 .project__info {
