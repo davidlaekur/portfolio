@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
        el mosaico como el agua. El centro queda libre.
        ===================================================== */
     const initGaudi = () => {
-        const canvas = document.getElementById('matrix-canvas');
+        const canvas = document.getElementById('gaudi-canvas');
         const ctx = canvas.getContext('2d');
 
         // Paleta marina de la Casa Batlló (vibrante)

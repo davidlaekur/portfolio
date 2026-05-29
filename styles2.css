@@ -5,19 +5,25 @@
 
 /* ---------- Variables ---------- */
 :root {
-    --color-bg: #070d14;
-    --color-bg-portfolio-1: #0d1b2a;
-    --color-bg-portfolio-2: #070d14;
+    /* Paleta Casa Batlló (Gaudí) — tonos del mar */
+    --color-bg: #061119;
+    --color-bg-portfolio-1: #0a2030;
+    --color-bg-portfolio-2: #061119;
     --color-surface: rgba(255, 255, 255, 0.03);
     --color-surface-hover: rgba(255, 255, 255, 0.05);
     --color-border: rgba(255, 255, 255, 0.07);
     --color-text: #ffffff;
     --color-text-muted: rgba(255, 255, 255, 0.7);
     --color-text-dim: rgba(255, 255, 255, 0.5);
-    --color-accent: #ffb347;
-    --color-accent-soft: rgba(255, 165, 0, 0.1);
-    --color-accent-border: rgba(255, 165, 0, 0.2);
-    --gradient-warm: linear-gradient(45deg, #ff6b6b, #ffb347);
+
+    /* Acento turquesa + secundario coral (RGB para usar con alpha) */
+    --accent-rgb: 70, 200, 205;
+    --accent-2-rgb: 240, 160, 100;
+    --color-accent: rgb(var(--accent-rgb));
+    --color-accent-2: rgb(var(--accent-2-rgb));
+    --color-accent-soft: rgba(var(--accent-rgb), 0.1);
+    --color-accent-border: rgba(var(--accent-rgb), 0.22);
+    --gradient-warm: linear-gradient(45deg, rgb(var(--accent-2-rgb)), rgb(var(--accent-rgb)));
 
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -46,28 +52,13 @@ body {
     color: var(--color-text);
 }
 
-/* ---------- Fondo Matrix ---------- */
-#matrix-canvas {
+/* ---------- Fondo: trencadís Casa Batlló ---------- */
+#gaudi-canvas {
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
     z-index: 3;
-}
-
-.bg-name {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    font-size: 5vw;
-    font-weight: 700;
-    white-space: nowrap;
-    letter-spacing: 0.1em;
-    color: rgba(255, 255, 255, 0.04);
-    pointer-events: none;
-    user-select: none;
 }
 
 /* =========================================================
@@ -99,7 +90,7 @@ body.is-portfolio-open .landing {
     width: 90%;
     padding: 48px 56px;
     border-radius: var(--radius-lg);
-    background: rgba(7, 13, 20, 0.72);
+    background: rgba(6, 17, 25, 0.78);
     border: 1px solid var(--color-accent-border);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
@@ -113,8 +104,8 @@ body.is-portfolio-open .landing {
     height: 230px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid rgba(255, 148, 0, 0.5);
-    box-shadow: 0 0 40px rgba(255, 148, 0, 0.25);
+    border: 4px solid rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.25);
 }
 
 .landing__body {
@@ -181,8 +172,8 @@ body.is-portfolio-open .landing {
 }
 
 .landing__socials a:hover {
-    background: rgba(255, 148, 0, 0.2);
-    border-color: rgba(255, 148, 0, 0.4);
+    background: rgba(var(--accent-rgb), 0.2);
+    border-color: rgba(var(--accent-rgb), 0.4);
     color: var(--color-accent);
     transform: translateY(-3px);
 }
@@ -207,9 +198,9 @@ body.is-portfolio-open .landing {
     width: 60px;
     height: 31px;
     padding: 0;
-    border: 2px solid #fec22a;
+    border: 2px solid rgba(var(--accent-rgb), 0.9);
     border-radius: 27px;
-    background: #ff9400;
+    background: var(--color-accent);
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.54, 1.6, 0.5, 1);
 }
@@ -279,7 +270,7 @@ body.is-portfolio-open .portfolio {
 
 .portfolio__back:hover {
     background: var(--color-accent-soft);
-    border-color: rgba(255, 165, 0, 0.3);
+    border-color: rgba(var(--accent-rgb), 0.3);
     color: var(--color-accent);
 }
 
@@ -320,7 +311,7 @@ body.is-portfolio-open .portfolio {
 .portfolio-nav a:hover,
 .portfolio-nav a.is-active {
     background: var(--color-accent-soft);
-    border-color: rgba(255, 165, 0, 0.25);
+    border-color: rgba(var(--accent-rgb), 0.25);
     color: var(--color-accent);
 }
 
@@ -390,9 +381,9 @@ body.is-portfolio-open .portfolio {
     display: inline-block;
     margin-bottom: 10px;
     padding: 5px 12px;
-    border: 1px solid rgba(255, 165, 0, 0.15);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
     border-radius: var(--radius-pill);
-    background: rgba(255, 165, 0, 0.08);
+    background: rgba(var(--accent-rgb), 0.08);
     font-size: 0.82rem;
     color: var(--color-accent);
 }
@@ -406,9 +397,9 @@ body.is-portfolio-open .portfolio {
 
 .tags span {
     padding: 3px 11px;
-    border: 1px solid rgba(255, 165, 0, 0.15);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
     border-radius: var(--radius-pill);
-    background: rgba(255, 165, 0, 0.08);
+    background: rgba(var(--accent-rgb), 0.08);
     font-size: 0.76rem;
     font-weight: 500;
     color: var(--color-accent);
@@ -601,7 +592,7 @@ body.is-portfolio-open .portfolio {
     margin-bottom: 16px;
     border: 1px solid var(--color-accent-border);
     border-radius: var(--radius-md);
-    background: linear-gradient(45deg, rgba(255, 107, 107, 0.15), rgba(255, 179, 71, 0.15));
+    background: linear-gradient(45deg, rgba(var(--accent-2-rgb), 0.15), rgba(var(--accent-rgb), 0.15));
     font-size: 1.4rem;
     color: var(--color-accent);
 }
@@ -631,7 +622,7 @@ body.is-portfolio-open .portfolio {
     top: 0;
     width: 1px;
     height: 100%;
-    background: rgba(255, 165, 0, 0.15);
+    background: rgba(var(--accent-rgb), 0.15);
 }
 
 .timeline__item {
@@ -647,13 +638,13 @@ body.is-portfolio-open .portfolio {
     height: 24px;
     border-radius: 50%;
     background: var(--gradient-warm);
-    box-shadow: 0 0 0 4px rgba(255, 165, 0, 0.1);
+    box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.1);
 }
 
 .timeline__content {
     padding: 22px;
     border: 1px solid var(--color-border);
-    border-left: 2px solid rgba(255, 165, 0, 0.3);
+    border-left: 2px solid rgba(var(--accent-rgb), 0.3);
     border-radius: var(--radius-md);
     background: var(--color-surface);
     transition: var(--transition);
@@ -743,7 +734,7 @@ body.is-portfolio-open .portfolio {
 }
 
 .project:hover {
-    border-color: rgba(255, 165, 0, 0.15);
+    border-color: rgba(var(--accent-rgb), 0.15);
     transform: translateY(-6px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
@@ -760,7 +751,7 @@ body.is-portfolio-open .portfolio {
 
 .project__placeholder {
     font-size: 2.5rem;
-    color: rgba(255, 165, 0, 0.4);
+    color: rgba(var(--accent-rgb), 0.4);
 }
 
 .project__links {
@@ -819,7 +810,7 @@ body.is-portfolio-open .portfolio {
     border-radius: 50%;
 }
 
-.legend__dot--adv { background: #ff6b6b; }
+.legend__dot--adv { background: var(--color-accent-2); }
 .legend__dot--mid { background: var(--color-accent); }
 .legend__dot--learn { background: rgba(255, 255, 255, 0.3); }
 
@@ -879,13 +870,13 @@ body.is-portfolio-open .portfolio {
     border-radius: 50%;
 }
 
-.chip--adv::before { background: #ff6b6b; }
+.chip--adv::before { background: var(--color-accent-2); }
 .chip--mid::before { background: var(--color-accent); }
 .chip--learn::before { background: rgba(255, 255, 255, 0.3); }
 
 .chip:hover {
     background: var(--color-accent-soft);
-    border-color: rgba(255, 165, 0, 0.25);
+    border-color: rgba(var(--accent-rgb), 0.25);
     color: var(--color-accent);
     transform: translateY(-2px);
 }
@@ -945,9 +936,9 @@ body.is-portfolio-open .portfolio {
     flex-shrink: 0;
     width: 38px;
     height: 38px;
-    border: 1px solid rgba(255, 165, 0, 0.15);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
     border-radius: 50%;
-    background: rgba(255, 165, 0, 0.08);
+    background: rgba(var(--accent-rgb), 0.08);
     font-size: 1.1rem;
     color: var(--color-accent);
 }
@@ -1004,7 +995,7 @@ body.is-portfolio-open .portfolio {
 .field input:focus,
 .field textarea:focus {
     outline: none;
-    border-color: rgba(255, 165, 0, 0.4);
+    border-color: rgba(var(--accent-rgb), 0.4);
     background: rgba(255, 255, 255, 0.07);
 }
 
