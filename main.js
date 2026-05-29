@@ -1,18 +1,9 @@
 /* =========================================================
    Portfolio · Davidlaekur
-   Lógica de interacción
-   ---------------------------------------------------------
-   Pantalla de inicio:
-   - Lluvia de caracteres en ESCRITURA ESPECULAR (homenaje a
-     Leonardo, que escribía sus códices de derecha a izquierda).
-   - Entre las letras caen frases reales de sus manuscritos.
-   - De fondo, el Hombre de Vitruvio se traza solo con código.
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ---------- Frases reales de los códices de Leonardo ----------
-       Fuentes: Codex Leicester, Manuscrito K, Codice sul volo degli uccelli. */
     const CODEX_PHRASES = [
         "l'acqua e il vetturale della natura",
         "l'acqua disfa li monti e riempie le valli",
@@ -22,152 +13,163 @@ document.addEventListener('DOMContentLoaded', () => {
         "ostinato rigore"
     ];
 
-    /* ---------- Utilidad: activar una sección ---------- */
+    /* ---------- Activar sección ---------- */
     const activateSection = (id) => {
         const target = document.getElementById(id);
         if (!target) return false;
-
         document.querySelectorAll('.section').forEach((s) => s.classList.remove('is-active'));
         document.querySelectorAll('.portfolio-nav a').forEach((l) => l.classList.remove('is-active'));
-
         target.classList.add('is-active');
-        const matchingNav = document.querySelector(`.portfolio-nav a[href="#${id}"]`);
-        if (matchingNav) matchingNav.classList.add('is-active');
-
+        const nav = document.querySelector(`.portfolio-nav a[href="#${id}"]`);
+        if (nav) nav.classList.add('is-active');
         document.getElementById('portfolio').scrollTo({ top: 0, behavior: 'smooth' });
         return true;
     };
 
     /* =====================================================
-       FONDO 1 · Hombre de Vitruvio dibujado con código
-       Se traza progresivamente sobre su propio canvas.
+       VITRUVIO — dibujado con código sobre canvas propio
+       Proporciones reales: círculo centrado en el ombligo,
+       cuadrado desplazado hacia abajo (centro en entrepierna).
+       Ratio lado/radio ≈ 1.64 (medición del original).
        ===================================================== */
     const initVitruvian = () => {
         const canvas = document.getElementById('vitruvian-canvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        let cx, cy, R; // centro y radio base
 
-        const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            cx = canvas.width / 2;
-            cy = canvas.height / 2;
-            R = Math.min(canvas.width, canvas.height) * 0.28; // radio del círculo
-        };
+        let animFrame = null;
+        let progress = 0;
+        let strokes = [];
 
-        // Devuelve la lista de "trazos" (cada uno es un array de puntos)
         const buildStrokes = () => {
-            const s = R; // medio lado del cuadrado ≈ radio (proporción real ~1.64 lado/radio)
-            const side = R * 1.64;          // lado del cuadrado
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const R = Math.min(w, h) * 0.28;
+            const side = R * 1.64;
             const half = side / 2;
-            const squareTop = cy - half * 0.78; // cuadrado desplazado hacia arriba
-            const strokes = [];
 
-            // Círculo (centro en el ombligo)
+            // Centro del cuadrado desplazado hacia abajo respecto al círculo
+            const sqCy = cy + R * 0.18;
+            const sqTop = sqCy - half;
+
+            const result = [];
+
+            // Círculo (centro = ombligo = cy)
             const circle = [];
-            for (let a = 0; a <= Math.PI * 2 + 0.05; a += 0.08) {
-                circle.push([cx + R * Math.cos(a), cy + R * Math.sin(a)]);
+            for (let a = 0; a <= Math.PI * 2 + 0.05; a += 0.06) {
+                circle.push([cx + R * Math.cos(a - Math.PI / 2), cy + R * Math.sin(a - Math.PI / 2)]);
             }
-            strokes.push(circle);
+            result.push(circle);
 
-            // Cuadrado (centro desplazado respecto al círculo, como en el original)
-            strokes.push([
-                [cx - half, squareTop],
-                [cx + half, squareTop],
-                [cx + half, squareTop + side],
-                [cx - half, squareTop + side],
-                [cx - half, squareTop]
+            // Cuadrado
+            result.push([
+                [cx - half, sqTop],
+                [cx + half, sqTop],
+                [cx + half, sqTop + side],
+                [cx - half, sqTop + side],
+                [cx - half, sqTop]
             ]);
 
-            // Figura esquemática · pose 1: brazos horizontales, piernas juntas
-            const headTop = squareTop + side * 0.04;
-            const headR = side * 0.07;
-            const shoulder = headTop + headR * 2;
-            const hip = cy + R * 0.15;
-            const foot = squareTop + side;
+            // Referencia vertical
+            const headR  = side * 0.068;
+            const headCy = sqTop + headR * 1.1;
+            const shoulder = headCy + headR * 1.3;
+            const hip     = cy + R * 0.18;
+            const foot    = sqTop + side;
 
-            // cabeza
+            // Cabeza
             const head = [];
-            for (let a = 0; a <= Math.PI * 2 + 0.05; a += 0.2) {
-                head.push([cx + headR * Math.cos(a), headTop + headR + headR * Math.sin(a)]);
+            for (let a = 0; a <= Math.PI * 2 + 0.05; a += 0.25) {
+                head.push([cx + headR * Math.cos(a), headCy + headR * Math.sin(a)]);
             }
-            strokes.push(head);
+            result.push(head);
 
-            // tronco
-            strokes.push([[cx, shoulder], [cx, hip]]);
-            // brazos horizontales (pose cuadrado)
-            strokes.push([[cx - half, shoulder + side * 0.05], [cx + half, shoulder + side * 0.05]]);
-            // brazos en alto (pose círculo)
-            strokes.push([[cx, shoulder + side * 0.03], [cx - R * 0.82, cy - R * 0.5]]);
-            strokes.push([[cx, shoulder + side * 0.03], [cx + R * 0.82, cy - R * 0.5]]);
-            // piernas juntas (pose cuadrado)
-            strokes.push([[cx, hip], [cx - side * 0.06, foot]]);
-            strokes.push([[cx, hip], [cx + side * 0.06, foot]]);
-            // piernas abiertas (pose círculo)
-            strokes.push([[cx, hip], [cx - R * 0.62, cy + R * 0.78]]);
-            strokes.push([[cx, hip], [cx + R * 0.62, cy + R * 0.78]]);
+            // Tronco
+            result.push([[cx, shoulder], [cx, hip]]);
 
-            return strokes;
+            // Brazos horizontales (pose cuadrado — toca los lados del cuadrado)
+            result.push([[cx - half, shoulder + side * 0.04], [cx + half, shoulder + side * 0.04]]);
+
+            // Brazos en alto (pose círculo — toca la circunferencia)
+            const armAngle = Math.PI / 5;
+            result.push([[cx, shoulder], [cx - R * Math.cos(armAngle), cy - R * Math.sin(armAngle)]]);
+            result.push([[cx, shoulder], [cx + R * Math.cos(armAngle), cy - R * Math.sin(armAngle)]]);
+
+            // Piernas juntas (pose cuadrado)
+            result.push([[cx, hip], [cx - side * 0.07, foot]]);
+            result.push([[cx, hip], [cx + side * 0.07, foot]]);
+
+            // Piernas abiertas (pose círculo — toca la circunferencia)
+            const legAngle = Math.PI / 3.8;
+            result.push([[cx, hip], [cx - R * Math.sin(legAngle), cy + R * Math.cos(legAngle * 0.6)]]);
+            result.push([[cx, hip], [cx + R * Math.sin(legAngle), cy + R * Math.cos(legAngle * 0.6)]]);
+
+            return result;
         };
 
-        let strokes = [];
-        let progress = 0; // cuántos segmentos llevamos dibujados
+        const totalSegments = (s) => s.reduce((n, st) => n + (st.length - 1), 0);
 
-        const totalSegments = () => strokes.reduce((n, st) => n + (st.length - 1), 0);
-
-        const drawProgressive = () => {
+        const render = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(255, 210, 122, 0.20)'; // dorado muy tenue
+            ctx.strokeStyle = 'rgba(255, 210, 122, 0.22)';
             ctx.lineWidth = 1;
+            ctx.lineCap = 'round';
 
             let drawn = 0;
             for (const st of strokes) {
-                ctx.beginPath();
                 for (let i = 0; i < st.length - 1; i++) {
-                    if (drawn >= progress) break;
+                    if (drawn >= progress) return;
+                    ctx.beginPath();
                     ctx.moveTo(st[i][0], st[i][1]);
                     ctx.lineTo(st[i + 1][0], st[i + 1][1]);
+                    ctx.stroke();
                     drawn++;
                 }
-                ctx.stroke();
             }
 
-            if (progress < totalSegments()) {
-                progress += 1; // velocidad de trazado
-                requestAnimationFrame(drawProgressive);
+            // Firma tenue cuando el dibujo está completo
+            if (progress >= totalSegments(strokes)) {
+                ctx.fillStyle = 'rgba(255, 210, 122, 0.08)';
+                ctx.font = '11px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('davidlaekur.com', canvas.width / 2, canvas.height - 12);
+            }
+        };
+
+        const animate = () => {
+            progress++;
+            render();
+            if (progress < totalSegments(strokes)) {
+                animFrame = requestAnimationFrame(animate);
             }
         };
 
         const start = () => {
-            resize();
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             strokes = buildStrokes();
             progress = 0;
-            drawProgressive();
+            if (animFrame) cancelAnimationFrame(animFrame);
+            animate();
         };
 
         start();
-        window.addEventListener('resize', () => {
-            strokes = buildStrokes();
-            // se mantiene dibujado completo tras redimensionar
-            progress = totalSegments();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawProgressive();
-        });
+        window.addEventListener('resize', start);
     };
 
     /* =====================================================
-       FONDO 2 · Lluvia en escritura especular
+       LLUVIA EN ESCRITURA ESPECULAR
+       Homenaje a la escritura en espejo de Leonardo da Vinci.
+       Las frases doradas son de sus manuscritos reales.
        ===================================================== */
     const initMatrix = () => {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
         const glyphs = "01{}[]<>/\\;:=+-*&|abcdefghijklmnopqrstuvwxyz".split('');
         const fontSize = 15;
-
-        let columns = 0;
-        let drops = [];
-        let phraseCol = [];
+        let columns = 0, drops = [], phraseCol = [];
 
         const resize = () => {
             canvas.width = window.innerWidth;
@@ -177,9 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
             phraseCol = Array(columns).fill(null);
         };
 
-        const drawGlyph = (text, x, y) => {
+        const drawMirror = (text, x, y) => {
             ctx.save();
-            ctx.translate(x + fontSize, y); // volteo horizontal = escritura especular
+            ctx.translate(x + fontSize, y);
             ctx.scale(-1, 1);
             ctx.fillText(text, 0, 0);
             ctx.restore();
@@ -198,18 +200,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     const p = phraseCol[i];
                     const char = p.text[p.index] || ' ';
                     ctx.fillStyle = '#ffd27a';
-                    drawGlyph(char, x, y);
+                    drawMirror(char, x, y);
                     p.index++;
                     if (p.index >= p.text.length) phraseCol[i] = null;
                 } else {
-                    const char = glyphs[Math.floor(Math.random() * glyphs.length)];
                     ctx.fillStyle = '#ff9400';
-                    drawGlyph(char, x, y);
+                    drawMirror(glyphs[Math.floor(Math.random() * glyphs.length)], x, y);
                 }
 
                 if (y > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
-                    if (Math.random() > 0.97 && !phraseCol[i]) {
+                    // Mayor probabilidad de frase para que se vean más
+                    if (Math.random() > 0.85 && !phraseCol[i]) {
                         const text = CODEX_PHRASES[Math.floor(Math.random() * CODEX_PHRASES.length)];
                         phraseCol[i] = { text, index: 0 };
                     }
@@ -223,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(draw, 60);
     };
 
-    /* ---------- Efecto máquina de escribir ---------- */
+    /* ---------- Typewriter ---------- */
     const initTypewriter = () => {
         const phrases = [
             'Desarrollador Full Stack Junior',
@@ -232,46 +234,32 @@ document.addEventListener('DOMContentLoaded', () => {
             'Construyendo cosas reales 🚀'
         ];
         const target = document.getElementById('typewriter');
-        let phraseIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
+        let pi = 0, ci = 0, deleting = false;
 
         const tick = () => {
-            const current = phrases[phraseIndex];
-            target.textContent = isDeleting
-                ? current.substring(0, charIndex--)
-                : current.substring(0, charIndex++);
-
-            if (!isDeleting && charIndex > current.length) {
-                isDeleting = true;
-                setTimeout(tick, 1800);
-                return;
-            }
-            if (isDeleting && charIndex < 0) {
-                isDeleting = false;
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-                charIndex = 0;
-            }
-            setTimeout(tick, isDeleting ? 40 : 70);
+            const current = phrases[pi];
+            target.textContent = deleting ? current.substring(0, ci--) : current.substring(0, ci++);
+            if (!deleting && ci > current.length) { deleting = true; setTimeout(tick, 1800); return; }
+            if (deleting && ci < 0) { deleting = false; pi = (pi + 1) % phrases.length; ci = 0; }
+            setTimeout(tick, deleting ? 40 : 70);
         };
-
         tick();
     };
 
-    /* ---------- Notificación temporal ---------- */
-    const showNotification = (message) => {
+    /* ---------- Notificación ---------- */
+    const showNotification = (msg) => {
         let note = document.querySelector('.notification');
         if (!note) {
             note = document.createElement('div');
             note.className = 'notification';
             document.body.appendChild(note);
         }
-        note.textContent = message;
+        note.textContent = msg;
         note.classList.add('is-visible');
         setTimeout(() => note.classList.remove('is-visible'), 2000);
     };
 
-    /* ---------- Abrir / cerrar portfolio ---------- */
+    /* ---------- Toggle portfolio ---------- */
     const initToggle = () => {
         const switchBtn = document.getElementById('switch');
         const backBtn = document.querySelector('.portfolio__back');
@@ -304,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    /* ---------- Formulario de contacto ---------- */
+    /* ---------- Formulario ---------- */
     const initContactForm = () => {
         const form = document.getElementById('contact-form');
         if (!form) return;
@@ -314,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    /* ---------- Inicialización ---------- */
+    /* ---------- Init ---------- */
     initVitruvian();
     initMatrix();
     initTypewriter();
