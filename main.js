@@ -20,91 +20,120 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =====================================================
-       HOMENAJE A GAUDÍ — Catenarias
-       Gaudí diseñaba sus estructuras con maquetas de cuerdas
-       colgantes (la "maqueta polifunicular"). Cada cuerda
-       describe una catenaria: y = a·cosh(x/a). Invertida, es
-       el arco perfecto. Aquí las dibujamos a ambos lados,
-       dejando el centro libre para la presentación.
+       HOMENAJE A GAUDÍ — Trencadís Casa Batlló
+       La fachada de la Casa Batlló está cubierta de trencadís
+       (mosaico de cerámica rota) en tonos del mar: azules,
+       turquesas, verdes y destellos coral. Aquí recreamos esa
+       superficie como una banda ondulada en la parte inferior,
+       con teselas irregulares y un reflejo de luz que recorre
+       el mosaico como el agua. El centro queda libre.
        ===================================================== */
     const initGaudi = () => {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
 
-        // Paleta trencadís (mosaicos del Park Güell)
-        const colors = [
-            'rgba(255, 179, 71, ALPHA)',   // ámbar
-            'rgba(255, 107, 107, ALPHA)',  // coral
-            'rgba(122, 197, 205, ALPHA)',  // turquesa
-            'rgba(255, 210, 122, ALPHA)',  // dorado
-            'rgba(180, 142, 173, ALPHA)'   // lila
+        // Paleta marina de la Casa Batlló (vibrante)
+        const palette = [
+            [54, 140, 180],   // azul mar
+            [70, 170, 200],   // azul cielo
+            [90, 200, 205],   // turquesa
+            [120, 215, 195],  // verde agua
+            [165, 225, 200],  // verde claro
+            [240, 160, 100],  // coral/terracota (destellos)
+            [250, 205, 120]   // dorado arena
         ];
 
-        let arcs = [];
+        let tiles = [];
         let t = 0;
 
-        const buildSide = (originX, dir, count) => {
-            // dir = +1 (lado derecho) o -1 (lado izquierdo)
-            const list = [];
-            for (let i = 0; i < count; i++) {
-                const span = 90 + i * 55;          // ancho del arco
-                const a = 70 + Math.random() * 60;  // tensión de la catenaria
-                const anchorY = canvas.height * (0.12 + Math.random() * 0.76);
-                list.push({
-                    originX,
-                    dir,
-                    span,
-                    a,
-                    anchorY,
-                    color: colors[i % colors.length],
-                    phase: Math.random() * Math.PI * 2,
-                    amp: 4 + Math.random() * 6
-                });
-            }
-            return list;
+        // Curva orgánica de la cresta superior de la banda (ondas Batlló)
+        const crestY = (x, w, h) => {
+            const base = h * 0.62;
+            return base
+                + Math.sin(x / w * Math.PI * 3) * h * 0.10
+                + Math.sin(x / w * Math.PI * 7 + 1.5) * h * 0.04;
         };
 
-        const buildArcs = () => {
-            const n = canvas.width < 768 ? 3 : 6;
-            arcs = [
-                ...buildSide(0, 1, n),                 // pegado al borde izquierdo
-                ...buildSide(canvas.width, -1, n)      // pegado al borde derecho
-            ];
+        const buildTiles = () => {
+            tiles = [];
+            const w = canvas.width;
+            const h = canvas.height;
+            const cell = w < 768 ? 26 : 34;   // tamaño aprox. de tesela
+            const jitter = cell * 0.32;
+
+            for (let gx = -cell; gx < w + cell; gx += cell) {
+                const top = crestY(gx, w, h);
+                for (let gy = top; gy < h + cell; gy += cell) {
+                    // saltar algunas para que el borde superior sea irregular
+                    if (gy < crestY(gx, w, h)) continue;
+                    const depth = (gy - top) / (h - top);   // 0 arriba → 1 abajo
+                    const col = palette[Math.floor(Math.random() * palette.length)];
+                    // vértices irregulares de cerámica rota
+                    const jx = () => (Math.random() - 0.5) * jitter;
+                    const jy = () => (Math.random() - 0.5) * jitter;
+                    tiles.push({
+                        pts: [
+                            [gx + jx(), gy + jy()],
+                            [gx + cell + jx(), gy + jy()],
+                            [gx + cell + jx(), gy + cell + jy()],
+                            [gx + jx(), gy + cell + jy()]
+                        ],
+                        col,
+                        cx: gx + cell / 2,
+                        // sólidas abajo, se difuminan suavemente solo en el borde superior
+                        base: Math.min(0.92, 0.55 + depth * 0.4),
+                        shimmer: Math.random() * Math.PI * 2
+                    });
+                }
+            }
         };
 
         const resize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            buildArcs();
+            buildTiles();
         };
 
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            t += 0.01;
+            t += 0.012;
 
-            for (const arc of arcs) {
-                // leve balanceo, como cuerdas que cuelgan
-                const sway = Math.sin(t + arc.phase) * arc.amp;
+            // reflejo de luz que recorre el mosaico (banda vertical suave)
+            const lightX = ((t * 60) % (canvas.width + 600)) - 300;
+
+            for (const tile of tiles) {
+                const [r, g, b] = tile.col;
+                // brillo extra cerca del reflejo móvil
+                const dist = Math.abs(tile.cx - lightX);
+                const glow = Math.max(0, 1 - dist / 260) * 0.35;
+                const pulse = (Math.sin(t * 1.5 + tile.shimmer) + 1) * 0.05;
+                const alpha = Math.min(0.95, tile.base + glow + pulse);
+
                 ctx.beginPath();
-                const steps = 40;
-                for (let s = 0; s <= steps; s++) {
-                    const px = (s / steps) * arc.span;            // 0 → span
-                    const local = px - arc.span / 2;              // centrado
-                    // catenaria invertida (arco): cae desde el ancla
-                    const y = arc.anchorY + arc.a * Math.cosh(local / arc.a) - arc.a + sway;
-                    const x = arc.originX + arc.dir * px;
-                    if (s === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
+                ctx.moveTo(tile.pts[0][0], tile.pts[0][1]);
+                for (let i = 1; i < tile.pts.length; i++) {
+                    ctx.lineTo(tile.pts[i][0], tile.pts[i][1]);
                 }
-                ctx.strokeStyle = arc.color.replace('ALPHA', '0.22');
-                ctx.lineWidth = 1.2;
+                ctx.closePath();
+                // tesela con brillo hacia el blanco según el reflejo
+                const lift = glow * 90;
+                ctx.fillStyle = `rgba(${r + lift}, ${g + lift}, ${b + lift}, ${alpha})`;
+                ctx.fill();
+                // junta de mortero entre teselas
+                ctx.strokeStyle = 'rgba(7, 13, 20, 0.55)';
+                ctx.lineWidth = 1.5;
                 ctx.stroke();
             }
         };
 
+        const loop = () => {
+            draw();
+            requestAnimationFrame(loop);
+        };
+
         resize();
         window.addEventListener('resize', resize);
-        setInterval(draw, 33);
+        loop();
     };
 
     /* ---------- Typewriter ---------- */
