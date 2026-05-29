@@ -4,14 +4,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const CODEX_PHRASES = [
-        "l'acqua e il vetturale della natura",
-        "l'acqua disfa li monti e riempie le valli",
-        "il volo degli uccelli",
-        "la luce e l'ombra",
-        "saper vedere",
-        "ostinato rigore"
-    ];
 
     /* ---------- Activar sección ---------- */
     const activateSection = (id) => {
@@ -28,61 +20,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =====================================================
-       LLUVIA DE CÓDIGO
-       Las frases doradas son citas reales de los cuadernos
-       de Leonardo da Vinci.
+       CODEX DA VINCI
+       Fragmentos reales de los cuadernos de Leonardo da Vinci.
+       Aparecen y desaparecen suavemente como páginas de sus
+       manuscritos: Codex Atlanticus, Codex Leicester, etc.
        ===================================================== */
-    const initMatrix = () => {
+    const initCodex = () => {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-        const glyphs = [...new Set(CODEX_PHRASES.join('').replace(/[^a-z]/g, ''))].sort();
-        const fontSize = 15;
-        let columns = 0, drops = [], phraseCol = [];
+
+        const phrases = [
+            "saper vedere",
+            "ostinato rigore",
+            "l'acqua è il vetturale della natura",
+            "l'acqua disfa li monti e riempie le valli",
+            "il volo degli uccelli",
+            "la luce e l'ombra",
+            "la meccanica è il paradiso delle scienze matematiche",
+            "la pittura è una poesia muta",
+            "il sole non si muove",
+            "l'occhio è la finestra dell'anima",
+            "dove la natura finisce, lì comincia l'arte",
+            "ogni ostacolo è distrutto dall'ardore"
+        ];
+
+        let fragments = [];
 
         const resize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            columns = Math.floor(canvas.width / fontSize);
-            drops = Array(columns).fill(1);
-            phraseCol = Array(columns).fill(null);
+        };
+
+        const spawn = () => {
+            const text = phrases[Math.floor(Math.random() * phrases.length)];
+            const fontSize = 12 + Math.floor(Math.random() * 6);
+            const margin = 100;
+            const x = margin + Math.random() * (canvas.width - margin * 2);
+            const y = margin + Math.random() * (canvas.height - margin * 2);
+            fragments.push({ text, x, y, fontSize, opacity: 0, state: 'in', hold: 0 });
         };
 
         const draw = () => {
-            ctx.fillStyle = 'rgba(7, 13, 20, 0.06)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = `${fontSize}px monospace`;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            for (let i = 0; i < columns; i++) {
-                const x = i * fontSize;
-                const y = drops[i] * fontSize;
-
-                if (phraseCol[i]) {
-                    const p = phraseCol[i];
-                    const char = p.text[p.index] || ' ';
-                    ctx.fillStyle = '#ffd27a';
-                    ctx.fillText(char, x, y);
-                    p.index++;
-                    if (p.index >= p.text.length) phraseCol[i] = null;
+            for (let i = fragments.length - 1; i >= 0; i--) {
+                const f = fragments[i];
+                if (f.state === 'in') {
+                    f.opacity += 0.003;
+                    if (f.opacity >= 0.28) { f.opacity = 0.28; f.state = 'hold'; }
+                } else if (f.state === 'hold') {
+                    f.hold++;
+                    if (f.hold > 160) f.state = 'out';
                 } else {
-                    ctx.fillStyle = '#ff9400';
-                    ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], x, y);
+                    f.opacity -= 0.002;
+                    if (f.opacity <= 0) { fragments.splice(i, 1); continue; }
                 }
-
-                if (y > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                    // Mayor probabilidad de frase para que se vean más
-                    if (Math.random() > 0.85 && !phraseCol[i]) {
-                        const text = CODEX_PHRASES[Math.floor(Math.random() * CODEX_PHRASES.length)];
-                        phraseCol[i] = { text, index: 0 };
-                    }
-                }
-                drops[i]++;
+                ctx.fillStyle = `rgba(255, 210, 122, ${f.opacity})`;
+                ctx.font = `italic ${f.fontSize}px Georgia, serif`;
+                ctx.fillText(f.text, f.x, f.y);
             }
+
+            if (fragments.length < 8 && Math.random() > 0.985) spawn();
         };
+
+        for (let i = 0; i < 5; i++) spawn();
 
         resize();
         window.addEventListener('resize', resize);
-        setInterval(draw, 120);
+        setInterval(draw, 50);
     };
 
     /* ---------- Typewriter ---------- */
@@ -163,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ---------- Init ---------- */
-    initMatrix();
+    initCodex();
     initTypewriter();
     initToggle();
     initInternalLinks();
