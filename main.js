@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const initMatrix = () => {
         const canvas = document.getElementById('matrix-canvas');
         const ctx = canvas.getContext('2d');
-        const glyphs = "01{}[]<>/\\;:=+-*&|abcdefghijklmnopqrstuvwxyz".split('');
+        const glyphs = [...new Set(CODEX_PHRASES.join('').replace(/[^a-z]/g, ''))].sort();
         const fontSize = 15;
         let columns = 0, drops = [], phraseCol = [];
 
