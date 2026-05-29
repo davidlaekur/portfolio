@@ -1357,25 +1357,62 @@ body.is-portfolio-open .portfolio {
         flex-direction: column;
     }
 
+    .landing {
+        gap: 22px;
+        padding: 4vh 16px 16vh;
+    }
+
+    .landing__brand {
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-align: center;
+        padding: 0 10px;
+    }
+
     .landing__inner {
         flex-direction: column;
-        gap: 24px;
-        padding: 36px 24px;
+        gap: 20px;
+        padding: 32px 20px 32px 24px;
         text-align: center;
+        max-width: calc(100vw - 28px);
+        width: calc(100vw - 28px);
     }
 
     .landing__avatar {
-        width: 160px;
-        height: 160px;
+        width: 150px;
+        height: 150px;
     }
 
     .landing__body {
         align-items: center;
+        width: 100%;
+    }
+
+    .landing__title {
+        font-size: clamp(1.7rem, 8vw, 2.3rem);
+        word-break: break-word;
     }
 
     .landing__title,
     .landing__typewriter {
         text-align: center;
+    }
+
+    .landing__bio {
+        max-width: 100%;
+        font-size: 0.9rem;
+    }
+
+    /* redes + switch: apilados y centrados para que no se corten */
+    .landing__actions {
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+    }
+
+    /* en táctil no hay hover: enlaces de proyecto siempre visibles */
+    .project__links {
+        bottom: 0;
     }
 }
 
