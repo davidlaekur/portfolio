@@ -1368,6 +1368,10 @@ body.is-portfolio-open .portfolio {
     .landing {
         gap: 22px;
         padding: 4vh 16px 16vh;
+        /* permite desplazar si el contenido no cabe en pantallas pequeñas */
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .landing__brand {
@@ -1421,6 +1425,52 @@ body.is-portfolio-open .portfolio {
     /* en táctil no hay hover: enlaces de proyecto siempre visibles */
     .project__links {
         bottom: 0;
+    }
+}
+
+/* ---------- Móviles pequeños: garantizar que redes + switch se vean ---------- */
+@media (max-width: 480px) {
+    .landing {
+        /* menos banda inferior para no empujar el contenido fuera de pantalla */
+        padding: 3vh 14px 6vh;
+        gap: 16px;
+    }
+
+    .landing__inner {
+        gap: 16px;
+        padding: 24px 16px;
+    }
+
+    .landing__avatar {
+        width: 110px;
+        height: 110px;
+    }
+
+    .landing__body {
+        gap: 12px;
+    }
+
+    .landing__bio {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    .landing__actions {
+        gap: 14px;
+        padding-bottom: 4px;
+    }
+}
+
+/* ---------- Pantallas muy bajas (móvil en horizontal, etc.) ---------- */
+@media (max-height: 680px) and (max-width: 768px) {
+    .landing {
+        padding-top: 2vh;
+        padding-bottom: 4vh;
+    }
+
+    .landing__avatar {
+        width: 90px;
+        height: 90px;
     }
 }
 
